@@ -30,8 +30,7 @@ namespace Tutorial009
         /// related content.  Calling base.Initialize will enumerate through any components
         /// and initialize them as well.
         /// </summary>
-        protected override void Initialize()
-        {
+        protected override void Initialize() {
             // TODO: Add your initialization logic here
 
             base.Initialize();
@@ -41,8 +40,7 @@ namespace Tutorial009
         /// LoadContent will be called once per game and is the place to load
         /// all of your content.
         /// </summary>
-        protected override void LoadContent()
-        {
+        protected override void LoadContent() {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
@@ -50,8 +48,7 @@ namespace Tutorial009
 
             _sprites = new List<Sprite>()
       {
-        new Player(playerTexture)
-        {
+        new Player(playerTexture) {
           Input = new Input()
           {
             Left = Keys.A,
@@ -62,6 +59,7 @@ namespace Tutorial009
           Position = new Vector2(100, 100),
           Colour = Color.Blue,
           Speed = 5,
+        } };
         }
 
         /// <summary>
