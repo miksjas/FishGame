@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Tutorial009
+namespace FishGame
 {
     public class Input
     {

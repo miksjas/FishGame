@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -7,7 +8,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace Tutorial009
+namespace FishGame
 {
     public class Player : Sprite
     {
@@ -24,7 +25,17 @@ namespace Tutorial009
             foreach (var sprite in sprites)
             {
                 if (sprite == this)
-                    continue;
+                    Debug.WriteLine(this.Position.X + " " + this.Position.Y);
+
+
+
+                if (this.Velocity.Y < 0 && (this.Position.Y < 0) ||
+                (this.Velocity.Y > 0 & (this.Position.Y > 768 - sprite.Rectangle.Height)))
+                    this.Velocity.Y = 0;
+
+                if (this.Velocity.X < 0 && (this.Position.X < 0) ||
+                    (this.Velocity.X > 0 & (this.Position.X > 1024 - sprite.Rectangle.Width)))
+                    this.Velocity.X = 0;
 
                 if ((this.Velocity.X > 0 && this.IsTouchingLeft(sprite)) ||
                     (this.Velocity.X < 0 & this.IsTouchingRight(sprite)))
@@ -33,6 +44,7 @@ namespace Tutorial009
                 if ((this.Velocity.Y > 0 && this.IsTouchingTop(sprite)) ||
                     (this.Velocity.Y < 0 & this.IsTouchingBottom(sprite)))
                     this.Velocity.Y = 0;
+
             }
 
             Position += Velocity;

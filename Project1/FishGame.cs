@@ -3,10 +3,9 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
-using Tutorial009;
 
 
-namespace Tutorial009
+namespace FishGame
 {
     /// <summary>
     /// This is the main type for your game.
@@ -17,11 +16,14 @@ namespace Tutorial009
         SpriteBatch spriteBatch;
 
         private List<Sprite> _sprites;
-
+        public Dictionary<string, Texture2D> textureDict;
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+            graphics.PreferredBackBufferWidth = 1024;
+            graphics.PreferredBackBufferHeight = 768;
+            graphics.ApplyChanges();
         }
 
         /// <summary>
@@ -41,10 +43,14 @@ namespace Tutorial009
         /// all of your content.
         /// </summary>
         protected override void LoadContent() {
+
+            textureDict = new Dictionary<string, Texture2D>();
+
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            var playerTexture = Content.Load<Texture2D>("fish");
+            var playerTexture = Content.Load<Texture2D>("fish-small");
+            textureDict.Add(playerTexture.Name, playerTexture);
 
             _sprites = new List<Sprite>()
       {

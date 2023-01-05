@@ -5,9 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Tutorial009;
+using FishGame;
 
-namespace Tutorial009
+namespace FishGame
 {
     public class Sprite
     {
