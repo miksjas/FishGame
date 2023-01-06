@@ -2,8 +2,11 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 using System.Collections.Generic;
-
+using System.Diagnostics;
+using System.Diagnostics.Metrics;
+using System.Linq;
 
 namespace FishGame
 {
@@ -14,9 +17,13 @@ namespace FishGame
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        Texture2D whiteRectangle;
 
         private List<Sprite> _sprites;
         public Dictionary<string, Texture2D> textureDict;
+        public float currentTime;
+        float countDuration = 2f;
+        int counter = 1;
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -32,7 +39,8 @@ namespace FishGame
         /// related content.  Calling base.Initialize will enumerate through any components
         /// and initialize them as well.
         /// </summary>
-        protected override void Initialize() {
+        protected override void Initialize()
+        {
             // TODO: Add your initialization logic here
 
             base.Initialize();
@@ -42,19 +50,22 @@ namespace FishGame
         /// LoadContent will be called once per game and is the place to load
         /// all of your content.
         /// </summary>
-        protected override void LoadContent() {
+        protected override void LoadContent()
+        {
 
             textureDict = new Dictionary<string, Texture2D>();
 
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            var playerTexture = Content.Load<Texture2D>("fish-small");
+  
+            var playerTexture = Content.Load<Texture2D>("fish-smallest");
             textureDict.Add(playerTexture.Name, playerTexture);
 
             _sprites = new List<Sprite>()
-      {
-        new Player(playerTexture) {
+            {
+
+        new Player(playerTexture) 
+        {
           Input = new Input()
           {
             Left = Keys.A,
@@ -64,10 +75,26 @@ namespace FishGame
           },
           Position = new Vector2(100, 100),
           Colour = Color.Blue,
-          Speed = 5,
+          speedHorizontal = 5,
         } };
+
         }
 
+        public void CreateObstacle()
+        {
+
+            List<int> dimensions = Obstacle.CalculateRandomRectangleParameters();
+            Texture2D texture2D = Obstacle.CreateTexture(GraphicsDevice, dimensions[0], dimensions[1], pixel => Color.Red);
+            whiteRectangle =  texture2D;
+            _sprites.Add(
+                new Obstacle(whiteRectangle)
+                {
+                    speedHorizontal = dimensions[2],
+                    Position = new Vector2(dimensions[3], dimensions[4])
+                }
+                );
+
+        }
         /// <summary>
         /// UnloadContent will be called once per game and is the place to unload
         /// game-specific content.
@@ -88,6 +115,14 @@ namespace FishGame
                 sprite.Update(gameTime, _sprites);
 
             base.Update(gameTime);
+
+            currentTime += (float)gameTime.ElapsedGameTime.TotalSeconds; 
+            if (currentTime >= countDuration)
+            {
+                CreateObstacle();
+                counter++;
+                currentTime -= countDuration;
+            }
         }
 
         /// <summary>
@@ -99,9 +134,8 @@ namespace FishGame
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             spriteBatch.Begin();
-
             foreach (var sprite in _sprites)
-                sprite.Draw(spriteBatch);
+            sprite.Draw(spriteBatch);
 
             spriteBatch.End();
 

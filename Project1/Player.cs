@@ -12,6 +12,7 @@ namespace FishGame
 {
     public class Player : Sprite
     {
+        bool gameOver = false;
         public Player(Texture2D texture)
           : base(texture)
         {
@@ -21,17 +22,27 @@ namespace FishGame
         public override void Update(GameTime gameTime, List<Sprite> sprites)
         {
             Move();
-
+            if (!gameOver)
+            {
+                foreach (var sprite in sprites)
+                {
+                    if (this.IsTouchingBottom(sprite) | this.IsTouchingTop(sprite) | this.IsTouchingLeft(sprite) | this.IsTouchingRight(sprite))
+                    {
+                        Debug.WriteLine("jeff");
+                        gameOver= true;
+                    }
+                }
+            }
             foreach (var sprite in sprites)
             {
                 if (sprite == this)
-                    Debug.WriteLine(this.Position.X + " " + this.Position.Y);
+                    //Debug.WriteLine("X:" + this.Position.X + " " + "Y:"+ this.Position.Y);
 
 
 
-                if (this.Velocity.Y < 0 && (this.Position.Y < 0) ||
-                (this.Velocity.Y > 0 & (this.Position.Y > 768 - sprite.Rectangle.Height)))
-                    this.Velocity.Y = 0;
+                    if (this.Velocity.Y < 0 && (this.Position.Y < 0) ||
+                    (this.Velocity.Y > 0 & (this.Position.Y > 768 - sprite.Rectangle.Height)))
+                        this.Velocity.Y = 0;
 
                 if (this.Velocity.X < 0 && (this.Position.X < 0) ||
                     (this.Velocity.X > 0 & (this.Position.X > 1024 - sprite.Rectangle.Width)))
@@ -39,11 +50,14 @@ namespace FishGame
 
                 if ((this.Velocity.X > 0 && this.IsTouchingLeft(sprite)) ||
                     (this.Velocity.X < 0 & this.IsTouchingRight(sprite)))
-                    this.Velocity.X = 0;
 
-                if ((this.Velocity.Y > 0 && this.IsTouchingTop(sprite)) ||
-                    (this.Velocity.Y < 0 & this.IsTouchingBottom(sprite)))
-                    this.Velocity.Y = 0;
+
+
+                    if ((this.Velocity.Y > 0 && this.IsTouchingTop(sprite)) ||
+                        (this.Velocity.Y < 0 & this.IsTouchingBottom(sprite)))
+                        this.Velocity.Y = 0;
+
+
 
             }
 
@@ -54,15 +68,20 @@ namespace FishGame
 
         private void Move()
         {
-            if (Keyboard.GetState().IsKeyDown(Input.Left))
-                Velocity.X = -Speed;
-            else if (Keyboard.GetState().IsKeyDown(Input.Right))
-                Velocity.X = Speed;
+            if (!gameOver)
+            {
+                if (Keyboard.GetState().IsKeyDown(Input.Left))
+                    Velocity.X = -speedHorizontal;
+                else if (Keyboard.GetState().IsKeyDown(Input.Right))
+                    Velocity.X = speedHorizontal;
 
-            if (Keyboard.GetState().IsKeyDown(Input.Up))
-                Velocity.Y = -Speed;
-            else if (Keyboard.GetState().IsKeyDown(Input.Down))
-                Velocity.Y = Speed;
+                if (Keyboard.GetState().IsKeyDown(Input.Up))
+                    Velocity.Y = -speedHorizontal;
+                else if (Keyboard.GetState().IsKeyDown(Input.Down))
+                    Velocity.Y = speedHorizontal;
+
+            }
+
         }
     }
 }

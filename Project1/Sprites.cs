@@ -16,10 +16,12 @@ namespace FishGame
         public Vector2 Position;
         public Vector2 Velocity;
         public Color Colour = Color.White;
-        public float Speed;
+        public float speedHorizontal;
         public Input Input;
+        public int RectangleHeight;
+        public int RectangleWidth;
 
-        public Rectangle Rectangle
+        public virtual Rectangle Rectangle
         {
             get
             {
@@ -42,7 +44,7 @@ namespace FishGame
             spriteBatch.Draw(_texture, Position, Colour);
         }
 
-        #region Colloision
+        #region Collision
         protected bool IsTouchingLeft(Sprite sprite)
         {
             return this.Rectangle.Right + this.Velocity.X > sprite.Rectangle.Left &&

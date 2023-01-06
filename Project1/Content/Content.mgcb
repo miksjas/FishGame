@@ -37,7 +37,7 @@
 /processorParam:TextureFormat=Color
 /build:fish-small.png
 
-#begin fish.png
+#begin fish-smallest.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -47,7 +47,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:fish.png
+/build:fish-smallest.png
 
 #begin red-rectangle.png
 /importer:TextureImporter
