@@ -20,7 +20,7 @@ namespace FishGame
         public Input Input;
         public int RectangleHeight;
         public int RectangleWidth;
-
+        public Vector2 Center;
         public virtual Rectangle Rectangle
         {
             get
@@ -32,6 +32,7 @@ namespace FishGame
         public Sprite(Texture2D texture)
         {
             _texture = texture;
+
         }
 
         public virtual void Update(GameTime gameTime, List<Sprite> sprites)

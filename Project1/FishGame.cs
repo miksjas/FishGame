@@ -17,7 +17,7 @@ namespace FishGame
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        Texture2D whiteRectangle;
+        Texture2D redRectangle;
 
         private List<Sprite> _sprites;
         public Dictionary<string, Texture2D> textureDict;
@@ -52,31 +52,44 @@ namespace FishGame
         /// </summary>
         protected override void LoadContent()
         {
-
+            Texture2D sensortexture = Obstacle.CreateTexture(GraphicsDevice, 4, 100, pixel => Color.White);
             textureDict = new Dictionary<string, Texture2D>();
-
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-  
+
             var playerTexture = Content.Load<Texture2D>("fish-smallest");
             textureDict.Add(playerTexture.Name, playerTexture);
 
-            _sprites = new List<Sprite>()
+            SmartPlayer x = new SmartPlayer(playerTexture, sensortexture)
             {
-
-        new Player(playerTexture) 
-        {
-          Input = new Input()
-          {
-            Left = Keys.A,
-            Right = Keys.D,
-            Up = Keys.W,
-            Down = Keys.S,
-          },
-          Position = new Vector2(100, 100),
-          Colour = Color.Blue,
-          speedHorizontal = 5,
-        } };
+                Input = new Input()
+                {
+                    Left = Keys.Left,
+                    Right = Keys.Right,
+                    Up = Keys.Up,
+                    Down = Keys.Down,
+                },
+                Position = new Vector2(300, 100),
+                speedHorizontal = 5,
+                Colour= Color.Yellow,
+            };
+            Sensor m = new Sensor(sensortexture, x);
+            _sprites = new List<Sprite>
+            {
+                new Player(playerTexture)
+                {
+                    Input = new Input()
+                    {
+                        Left = Keys.A,
+                        Right = Keys.D,
+                        Up = Keys.W,
+                        Down = Keys.S,
+                    },
+                    Position = new Vector2(100, 100),
+                    speedHorizontal = 5,
+                },
+                x, m
+            };
 
         }
 
@@ -85,9 +98,9 @@ namespace FishGame
 
             List<int> dimensions = Obstacle.CalculateRandomRectangleParameters();
             Texture2D texture2D = Obstacle.CreateTexture(GraphicsDevice, dimensions[0], dimensions[1], pixel => Color.Red);
-            whiteRectangle =  texture2D;
+            redRectangle =  texture2D;
             _sprites.Add(
-                new Obstacle(whiteRectangle)
+                new Obstacle(redRectangle)
                 {
                     speedHorizontal = dimensions[2],
                     Position = new Vector2(dimensions[3], dimensions[4])
@@ -116,7 +129,7 @@ namespace FishGame
 
             base.Update(gameTime);
 
-            currentTime += (float)gameTime.ElapsedGameTime.TotalSeconds; 
+            currentTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
             if (currentTime >= countDuration)
             {
                 CreateObstacle();
@@ -135,7 +148,7 @@ namespace FishGame
 
             spriteBatch.Begin();
             foreach (var sprite in _sprites)
-            sprite.Draw(spriteBatch);
+                sprite.Draw(spriteBatch);
 
             spriteBatch.End();
 

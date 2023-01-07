@@ -12,7 +12,7 @@ namespace FishGame
 {
     public class Player : Sprite
     {
-        bool gameOver = false;
+        public bool gameOver = false;
         public Player(Texture2D texture)
           : base(texture)
         {
@@ -22,18 +22,28 @@ namespace FishGame
         public override void Update(GameTime gameTime, List<Sprite> sprites)
         {
             Move();
+
             if (!gameOver)
             {
                 foreach (var sprite in sprites)
                 {
-                    if (this.IsTouchingBottom(sprite) | this.IsTouchingTop(sprite) | this.IsTouchingLeft(sprite) | this.IsTouchingRight(sprite))
+                    if (!(sprite is Player) && (!(sprite is Sensor)))
                     {
-                        Debug.WriteLine("jeff");
-                        gameOver= true;
+                        if (sprite.Rectangle.Intersects(this.Rectangle))
+                        {
+                            Debug.WriteLine("jeff");
+                            gameOver= true;
+                        }
+/*                        if (this.IsTouchingBottom(sprite) | this.IsTouchingTop(sprite) | this.IsTouchingLeft(sprite) | this.IsTouchingRight(sprite))
+                        {
+                            Debug.WriteLine("hit");
+                            
+                        }*/
                     }
+
                 }
             }
-            foreach (var sprite in sprites)
+/*            foreach (var sprite in sprites)
             {
                 if (sprite == this)
                     //Debug.WriteLine("X:" + this.Position.X + " " + "Y:"+ this.Position.Y);
@@ -59,13 +69,20 @@ namespace FishGame
 
 
 
-            }
+            }*/
 
             Position += Velocity;
 
             Velocity = Vector2.Zero;
         }
+        public override void Draw(SpriteBatch spriteBatch)
+        {   
+            if (!gameOver)
+            {
+                spriteBatch.Draw(_texture, Position, Colour);
+            }
 
+        }
         private void Move()
         {
             if (!gameOver)
