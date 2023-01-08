@@ -14,8 +14,7 @@ namespace FishGame
     {
         private readonly Texture2D texture;
         private SmartPlayer smartfish;
-        public bool isColliding = false;
-        private Rectangle Rectangle;
+        public bool isColliding;
         public Sensor(Texture2D texture, SmartPlayer smartfish) : base(texture)
         {
             this.texture=texture;
@@ -31,9 +30,10 @@ namespace FishGame
 
             Matrix transform =
             Matrix.CreateTranslation(new Vector3(-(new Vector2(0,0)), 0.0f)) *
-            Matrix.CreateRotationZ(1.57079633f) *
+            Matrix.CreateRotationZ(-1.57079633f) *
             Matrix.CreateTranslation(new Vector3(this.Position, 0.0f));
-            this.Rectangle = CalculateBoundingRectangle(Rectangle, transform);
+            //this.Rectangle = CalculateBoundingRectangle(Rectangle, transform);
+            this.isColliding=false;
             foreach (var sprite in sprites)
             {
                 if (sprite is not Player && (sprite is not Sensor))
@@ -41,15 +41,13 @@ namespace FishGame
                     if (this.Rectangle.Intersects(sprite.Rectangle))
                     {
                         Debug.WriteLine("hit");
-                        isColliding= true;
+                        this.isColliding= true;
                     }
-                    else
-                    {
-                        isColliding= false;
-                    }
+
                 }
 
             }
+
 
         }
         public override void Draw(SpriteBatch spriteBatch)
@@ -62,7 +60,7 @@ namespace FishGame
 
         private void DrawRays(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(texture, PositionVector(), new Rectangle(), GetColor(), -1.57079633f, new Vector2(0, 0), 1, SpriteEffects.None, 0f);
+            spriteBatch.Draw(texture, PositionVector(), this.Rectangle, GetColor(), -1.57079633f, new Vector2(0, 0), 1, SpriteEffects.None, 0f);
 /*            spriteBatch.Draw(texture, PositionVector(), this.Rectangle, GetColor(), -0.785398163f, new Vector2(0, 0), 1, SpriteEffects.None, 0f);
             spriteBatch.Draw(texture, PositionVector(), this.Rectangle, GetColor(), -2.356194493f, new Vector2(0, 0), 1, SpriteEffects.None, 0f);*/
         }
