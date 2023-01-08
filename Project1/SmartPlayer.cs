@@ -14,17 +14,16 @@ namespace FishGame
     {
         private new Color Colour = Color.Yellow;
 
-
+        public Sensor Sensor;
         private Texture2D sensorTexture;
-        Sensor Sensor;
         public SmartPlayer(Texture2D texture, Texture2D sensorTexture) : base(texture)
         {
             this.sensorTexture=sensorTexture;
-            this.Sensor = new Sensor(sensorTexture, this);
-
+            this.Sensor = new Sensor(sensorTexture, this,30);
         }
         public override void Update(GameTime gameTime, List<Sprite> sprites)
         {
+            Debug.WriteLine(this.Position.X + " " + this.Position.Y + " ");
             Move();
             if (!gameOver)
             {

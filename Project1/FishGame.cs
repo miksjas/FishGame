@@ -13,7 +13,7 @@ namespace FishGame
     /// <summary>
     /// This is the main type for your game.
     /// </summary>
-    public class Game1 : Game
+    public class FishGame : Game
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
@@ -24,7 +24,7 @@ namespace FishGame
         public float currentTime;
         float countDuration = 2f;
         int counter = 1;
-        public Game1()
+        public FishGame()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
@@ -73,7 +73,9 @@ namespace FishGame
                 speedHorizontal = 5,
                 Colour= Color.Yellow,
             };
-            Sensor m = new Sensor(sensortexture, x);
+            
+            Sensor c = new Sensor(sensortexture, x, -30);
+            Sensor m = new Sensor(sensortexture, x, 30);
             _sprites = new List<Sprite>
             {
                 new Player(playerTexture)
@@ -88,7 +90,7 @@ namespace FishGame
                     Position = new Vector2(100, 100),
                     speedHorizontal = 5,
                 },
-                x, m
+                x, m,c
             };
 
         }

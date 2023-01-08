@@ -16,13 +16,14 @@ namespace FishGame
         private readonly Texture2D texture;
         private SmartPlayer smartfish;
         public bool isColliding;
-        public float rayAngle = -1.57079633f;
+        public float rayAngle;
         public Rectangle rotatedRectangle;
 
-        public Sensor(Texture2D texture, SmartPlayer smartfish) : base(texture)
+        public Sensor(Texture2D texture, SmartPlayer smartfish, float angle) : base(texture)
         {
             this.texture=texture;
             this.smartfish = smartfish;
+            this.rayAngle=(float)ConvertToRadians(angle+90);
         }
 
 
@@ -58,12 +59,19 @@ namespace FishGame
             //Point A = (PositionVector().X+texture.Height), PositionVector().Y)
             //XC = PositionVector().X
             //YC = PositionVector().Y
-            //XA = (PositionVector().X+texture.Height)
-            //YA = PositionVector().Y
+            //old XA = (PositionVector().X+texture.Height)
+            //old YA = PositionVector().Y
 
             //XB = PositionVector().X + ((PositionVector().X+texture.Height) - PositionVector().X) * cos(angle) + (PositionVector().Y - PositionVector().Y) * sin(angle)
             //YB = PositionVector().Y - ((PositionVector().X+texture.Height) - PositionVector().X) * sin(angle) + (PositionVector().Y - PositionVector().Y) * cos(angle)
-            return LineIntersectsRect(PositionVector(), new Vector2((float)(PositionVector().X + ((PositionVector().X+texture.Height) - PositionVector().X) * Math.Cos(angle) + (PositionVector().Y - PositionVector().Y) * Math.Sin(angle)), (float)(PositionVector().Y - ((PositionVector().X+texture.Height) - PositionVector().X) * Math.Sin(angle) + (PositionVector().Y - PositionVector().Y) * Math.Cos(angle))), sprite.Rectangle);
+
+
+            //new XA = (PositionVector().X)
+            //new YA = (PositionVector().Y+texture.Height)
+            //
+            //new XB = PositionVector().X + ((PositionVector().X) - PositionVector().X) * cos(angle) + ((PositionVector().Y+texture.Height) - PositionVector().Y) * sin(angle)
+            // new XY = PositionVector().Y - ((PositionVector().X) - PositionVector().X) * sin(angle) + ((PositionVector().Y+texture.Height) - PositionVector().Y) * cos(angle)
+            return LineIntersectsRect(PositionVector(), new Vector2((float)(PositionVector().X + ((PositionVector().X) - PositionVector().X) * Math.Cos(angle) + ((PositionVector().Y+texture.Height) - PositionVector().Y) * Math.Sin(angle)), (float)(PositionVector().Y - ((PositionVector().X) - PositionVector().X) * Math.Sin(angle) + ((PositionVector().Y+texture.Height) - PositionVector().Y) * Math.Cos(angle))),sprite.Rectangle);
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -77,7 +85,7 @@ namespace FishGame
         private void DrawRay(SpriteBatch spriteBatch)
         {
 
-            spriteBatch.Draw(texture, PositionVector(), null, GetColor(), 0, new Vector2(0, 0), 1, SpriteEffects.None, 0f);
+            spriteBatch.Draw(texture, PositionVector(), null, GetColor(), -rayAngle, new Vector2(0, 0), 1, SpriteEffects.None, 0f);
 
         }
 
@@ -93,7 +101,10 @@ namespace FishGame
             }
 
         }
-
+        public static double ConvertToRadians(double angle)
+        {
+            return (Math.PI / 180) * angle;
+        }
         private Vector2 PositionVector()
         {
             return new Vector2(smartfish.Position.X+smartfish.Rectangle.Width+0, smartfish.Position.Y+smartfish.Rectangle.Height/2+2);
