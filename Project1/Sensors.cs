@@ -24,6 +24,7 @@ namespace FishGame
             this.texture=texture;
             this.smartfish = smartfish;
             this.rayAngle=(float)ConvertToRadians(angle+90);
+            smartfish.Sensors.Add(this);
         }
 
 
@@ -41,7 +42,6 @@ namespace FishGame
                 {
                     if (CheckIfLineIntersects(sprite, rayAngle))
                     {
-                        Debug.WriteLine("hit");
                         this.isColliding= true;
                     }
 
