@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,9 +25,40 @@ namespace FishGame
         }
         public override void Update(GameTime gameTime, List<Sprite> sprites)
         {
-
             Move();
+            if (!gameOver)
+            {
+                foreach (var sprite in sprites)
+                {
+                    if (!(sprite is Player) && (!(sprite is Sensor)))
+                    {
+                        if (sprite.Rectangle.Intersects(this.Rectangle))
+                        {
+                            Debug.WriteLine("jeff");
+                            gameOver= true;
+                        }
+                    }
+
+                }
+            }
+            foreach (var sprite in sprites)
+            {
+                if (sprite == this)
+
+
+
+                    if (this.Velocity.Y < 0 && (this.Position.Y < 0) ||
+                    (this.Velocity.Y > 0 & (this.Position.Y > 768 - sprite.Rectangle.Height)))
+                        this.Velocity.Y = 0;
+
+                if (this.Velocity.X < 0 && (this.Position.X < 0) ||
+                    (this.Velocity.X > 0 & (this.Position.X > 1024 - sprite.Rectangle.Width)))
+                    this.Velocity.X = 0;
+            }
+
+
             Position += Velocity;
+            Velocity = Vector2.Zero;
         }
         private void Move()
         {

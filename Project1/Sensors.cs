@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection.Metadata;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,6 +16,9 @@ namespace FishGame
         private readonly Texture2D texture;
         private SmartPlayer smartfish;
         public bool isColliding;
+
+        public Rectangle rotatedRectangle;
+
         public Sensor(Texture2D texture, SmartPlayer smartfish) : base(texture)
         {
             this.texture=texture;
@@ -28,17 +32,13 @@ namespace FishGame
             Move();
             this.Position = PositionVector();
 
-            Matrix transform =
-            Matrix.CreateTranslation(new Vector3(-(new Vector2(0,0)), 0.0f)) *
-            Matrix.CreateRotationZ(-1.57079633f) *
-            Matrix.CreateTranslation(new Vector3(this.Position, 0.0f));
-            //this.Rectangle = CalculateBoundingRectangle(Rectangle, transform);
+
             this.isColliding=false;
             foreach (var sprite in sprites)
             {
                 if (sprite is not Player && (sprite is not Sensor))
                 {
-                    if (this.Rectangle.Intersects(sprite.Rectangle))
+                    if (CheckIfLineIntersects(sprite))
                     {
                         Debug.WriteLine("hit");
                         this.isColliding= true;
@@ -50,19 +50,25 @@ namespace FishGame
 
 
         }
+
+        private bool CheckIfLineIntersects(Sprite sprite)
+        {
+            return LineIntersectsRect(PositionVector(), new Vector2(PositionVector().X+texture.Height, PositionVector().Y), sprite.Rectangle);
+        }
+
         public override void Draw(SpriteBatch spriteBatch)
         {
             //spriteBatch.Draw(texture, new Vector2(smartfish.Position.X + smartfish.RectangleWidth / 2 ,smartfish.Position.Y + smartfish.RectangleHeight /2 ), this.Rectangle,Color.Yellow, 1.57079633f, new Vector2(texture.Width/2,texture.Height/2),1, SpriteEffects.None,0f);
             //spriteBatch.Draw(texture, new Vector2(300+32+50+,100+25/2), this.Rectangle, Color.Yellow, 1.57079633f, new Vector2(texture.Width/2, texture.Height/2), 1, SpriteEffects.None, 0f);
             //300=smartfish.Position.X     32/2 = smartfish.rectnaglewidth/2  50 = texture.Width/2 16 = smartfish.rectanglewidth/2
-            DrawRays(spriteBatch);
+            DrawRay(spriteBatch);
         }
 
-        private void DrawRays(SpriteBatch spriteBatch)
+        private void DrawRay(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(texture, PositionVector(), this.Rectangle, GetColor(), -1.57079633f, new Vector2(0, 0), 1, SpriteEffects.None, 0f);
-/*            spriteBatch.Draw(texture, PositionVector(), this.Rectangle, GetColor(), -0.785398163f, new Vector2(0, 0), 1, SpriteEffects.None, 0f);
-            spriteBatch.Draw(texture, PositionVector(), this.Rectangle, GetColor(), -2.356194493f, new Vector2(0, 0), 1, SpriteEffects.None, 0f);*/
+            spriteBatch.Draw(texture, PositionVector(), null, GetColor(), -1.57079633f, new Vector2(0, 0), 1, SpriteEffects.None, 0f);
+            spriteBatch.Draw(texture, PositionVector(), null, GetColor(), -0.785398163f, new Vector2(0, 0), 1, SpriteEffects.None, 0f);
+            spriteBatch.Draw(texture, PositionVector(), null, GetColor(), -2.356194493f, new Vector2(0, 0), 1, SpriteEffects.None, 0f);
         }
 
         private Color GetColor()
@@ -88,31 +94,36 @@ namespace FishGame
 
 
         }
-
-        public static Rectangle CalculateBoundingRectangle(Rectangle rectangle,
-                                                   Matrix transform)
+        public static bool LineIntersectsRect(Vector2 p1, Vector2 p2, Rectangle r)
         {
-            // Get all four corners in local space
-            Vector2 leftTop = new Vector2(rectangle.Left, rectangle.Top);
-            Vector2 rightTop = new Vector2(rectangle.Right, rectangle.Top);
-            Vector2 leftBottom = new Vector2(rectangle.Left, rectangle.Bottom);
-            Vector2 rightBottom = new Vector2(rectangle.Right, rectangle.Bottom);
+            
+            return LineIntersectsLine(p1, p2, new Vector2(r.X, r.Y), new Vector2(r.X + r.Width, r.Y)) ||
+                   LineIntersectsLine(p1, p2, new Vector2(r.X + r.Width, r.Y), new Vector2(r.X + r.Width, r.Y + r.Height)) ||
+                   LineIntersectsLine(p1, p2, new Vector2(r.X + r.Width, r.Y + r.Height), new Vector2(r.X, r.Y + r.Height)) ||
+                   LineIntersectsLine(p1, p2, new Vector2(r.X, r.Y + r.Height), new Vector2(r.X, r.Y)) ||
+                   (r.Contains(p1) && r.Contains(p2));
+        }
+        private static bool LineIntersectsLine(Vector2 l1p1, Vector2 l1p2, Vector2 l2p1, Vector2 l2p2)
+        {
+            float q = (l1p1.Y - l2p1.Y) * (l2p2.X - l2p1.X) - (l1p1.X - l2p1.X) * (l2p2.Y - l2p1.Y);
+            float d = (l1p2.X - l1p1.X) * (l2p2.Y - l2p1.Y) - (l1p2.Y - l1p1.Y) * (l2p2.X - l2p1.X);
 
-            // Transform all four corners into work space
-            Vector2.Transform(ref leftTop, ref transform, out leftTop);
-            Vector2.Transform(ref rightTop, ref transform, out rightTop);
-            Vector2.Transform(ref leftBottom, ref transform, out leftBottom);
-            Vector2.Transform(ref rightBottom, ref transform, out rightBottom);
+            if (d == 0)
+            {
+                return false;
+            }
 
-            // Find the minimum and maximum extents of the rectangle in world space
-            Vector2 min = Vector2.Min(Vector2.Min(leftTop, rightTop),
-                                      Vector2.Min(leftBottom, rightBottom));
-            Vector2 max = Vector2.Max(Vector2.Max(leftTop, rightTop),
-                                      Vector2.Max(leftBottom, rightBottom));
+            float r = q / d;
 
-            // Return that as a rectangle
-            return new Rectangle((int)min.X, (int)min.Y,
-                                 (int)(max.X - min.X), (int)(max.Y - min.Y));
+            q = (l1p1.Y - l2p1.Y) * (l1p2.X - l1p1.X) - (l1p1.X - l2p1.X) * (l1p2.Y - l1p1.Y);
+            float s = q / d;
+
+            if (r < 0 || r > 1 || s < 0 || s > 1)
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }

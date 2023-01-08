@@ -52,7 +52,7 @@ namespace FishGame
         /// </summary>
         protected override void LoadContent()
         {
-            Texture2D sensortexture = Obstacle.CreateTexture(GraphicsDevice, 4, 100, pixel => Color.White);
+            Texture2D sensortexture = Obstacle.CreateTexture(GraphicsDevice, 3, 100, pixel => Color.White);
             textureDict = new Dictionary<string, Texture2D>();
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);

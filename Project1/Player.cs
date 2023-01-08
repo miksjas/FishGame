@@ -43,7 +43,7 @@ namespace FishGame
 
                 }
             }
-/*            foreach (var sprite in sprites)
+            foreach (var sprite in sprites)
             {
                 if (sprite == this)
                     //Debug.WriteLine("X:" + this.Position.X + " " + "Y:"+ this.Position.Y);
@@ -57,7 +57,7 @@ namespace FishGame
                 if (this.Velocity.X < 0 && (this.Position.X < 0) ||
                     (this.Velocity.X > 0 & (this.Position.X > 1024 - sprite.Rectangle.Width)))
                     this.Velocity.X = 0;
-
+/*
                 if ((this.Velocity.X > 0 && this.IsTouchingLeft(sprite)) ||
                     (this.Velocity.X < 0 & this.IsTouchingRight(sprite)))
 
@@ -65,11 +65,11 @@ namespace FishGame
 
                     if ((this.Velocity.Y > 0 && this.IsTouchingTop(sprite)) ||
                         (this.Velocity.Y < 0 & this.IsTouchingBottom(sprite)))
-                        this.Velocity.Y = 0;
+                        this.Velocity.Y = 0;*/
 
 
 
-            }*/
+            }
 
             Position += Velocity;
 
