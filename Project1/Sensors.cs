@@ -16,7 +16,7 @@ namespace FishGame
         private readonly Texture2D texture;
         private SmartPlayer smartfish;
         public bool isColliding;
-
+        public float rayAngle = -1.57079633f;
         public Rectangle rotatedRectangle;
 
         public Sensor(Texture2D texture, SmartPlayer smartfish) : base(texture)
@@ -38,7 +38,7 @@ namespace FishGame
             {
                 if (sprite is not Player && (sprite is not Sensor))
                 {
-                    if (CheckIfLineIntersects(sprite))
+                    if (CheckIfLineIntersects(sprite, rayAngle))
                     {
                         Debug.WriteLine("hit");
                         this.isColliding= true;
@@ -51,9 +51,19 @@ namespace FishGame
 
         }
 
-        private bool CheckIfLineIntersects(Sprite sprite)
+        private bool CheckIfLineIntersects(Sprite sprite,float angle)
         {
-            return LineIntersectsRect(PositionVector(), new Vector2(PositionVector().X+texture.Height, PositionVector().Y), sprite.Rectangle);
+            //https://math.stackexchange.com/questions/404407/new-x-coordinate-of-a-rotated-line
+            //Point C = PositionVector()
+            //Point A = (PositionVector().X+texture.Height), PositionVector().Y)
+            //XC = PositionVector().X
+            //YC = PositionVector().Y
+            //XA = (PositionVector().X+texture.Height)
+            //YA = PositionVector().Y
+
+            //XB = PositionVector().X + ((PositionVector().X+texture.Height) - PositionVector().X) * cos(angle) + (PositionVector().Y - PositionVector().Y) * sin(angle)
+            //YB = PositionVector().Y - ((PositionVector().X+texture.Height) - PositionVector().X) * sin(angle) + (PositionVector().Y - PositionVector().Y) * cos(angle)
+            return LineIntersectsRect(PositionVector(), new Vector2((float)(PositionVector().X + ((PositionVector().X+texture.Height) - PositionVector().X) * Math.Cos(angle) + (PositionVector().Y - PositionVector().Y) * Math.Sin(angle)), (float)(PositionVector().Y - ((PositionVector().X+texture.Height) - PositionVector().X) * Math.Sin(angle) + (PositionVector().Y - PositionVector().Y) * Math.Cos(angle))), sprite.Rectangle);
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -66,9 +76,9 @@ namespace FishGame
 
         private void DrawRay(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(texture, PositionVector(), null, GetColor(), -1.57079633f, new Vector2(0, 0), 1, SpriteEffects.None, 0f);
-            spriteBatch.Draw(texture, PositionVector(), null, GetColor(), -0.785398163f, new Vector2(0, 0), 1, SpriteEffects.None, 0f);
-            spriteBatch.Draw(texture, PositionVector(), null, GetColor(), -2.356194493f, new Vector2(0, 0), 1, SpriteEffects.None, 0f);
+
+            spriteBatch.Draw(texture, PositionVector(), null, GetColor(), 0, new Vector2(0, 0), 1, SpriteEffects.None, 0f);
+
         }
 
         private Color GetColor()
