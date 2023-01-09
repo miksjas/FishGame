@@ -50,8 +50,8 @@ namespace FishGame
                     (this.Velocity.Y > 0 & (this.Position.Y > 768 - sprite.Rectangle.Height)))
                         this.Velocity.Y = 0;
 
-                if (this.Velocity.X < 0 && (this.Position.X < 0) ||
-                    (this.Velocity.X > 0 & (this.Position.X > 1024 - sprite.Rectangle.Width)))
+                if (this.Velocity.X < 0 && (this.Position.X < 301) ||
+                    (this.Velocity.X > 0 & (this.Position.X > 1024+550 - sprite.Rectangle.Width)))
                     this.Velocity.X = 0;
             }
 

@@ -79,7 +79,11 @@ namespace FishGame
             //spriteBatch.Draw(texture, new Vector2(smartfish.Position.X + smartfish.RectangleWidth / 2 ,smartfish.Position.Y + smartfish.RectangleHeight /2 ), this.Rectangle,Color.Yellow, 1.57079633f, new Vector2(texture.Width/2,texture.Height/2),1, SpriteEffects.None,0f);
             //spriteBatch.Draw(texture, new Vector2(300+32+50+,100+25/2), this.Rectangle, Color.Yellow, 1.57079633f, new Vector2(texture.Width/2, texture.Height/2), 1, SpriteEffects.None, 0f);
             //300=smartfish.Position.X     32/2 = smartfish.rectnaglewidth/2  50 = texture.Width/2 16 = smartfish.rectanglewidth/2
-            DrawRay(spriteBatch);
+            if (!smartfish.gameOver)
+            {
+                DrawRay(spriteBatch);
+            }
+            
         }
 
         private void DrawRay(SpriteBatch spriteBatch)
@@ -124,27 +128,32 @@ namespace FishGame
                    LineIntersectsLine(p1, p2, new Vector2(r.X, r.Y + r.Height), new Vector2(r.X, r.Y)) ||
                    (r.Contains(p1) && r.Contains(p2));
         }
-        private static bool LineIntersectsLine(Vector2 l1p1, Vector2 l1p2, Vector2 l2p1, Vector2 l2p2)
+        //https://stackoverflow.com/questions/2083942/draw-the-two-lines-with-intersect-each-other-and-need-to-find-the-intersect-poin
+        private static bool LineIntersectsLine(Vector2 a1, Vector2 a2, Vector2 b1, Vector2 b2)
         {
-            float q = (l1p1.Y - l2p1.Y) * (l2p2.X - l2p1.X) - (l1p1.X - l2p1.X) * (l2p2.Y - l2p1.Y);
-            float d = (l1p2.X - l1p1.X) * (l2p2.Y - l2p1.Y) - (l1p2.Y - l1p1.Y) * (l2p2.X - l2p1.X);
+            float dx, dy, da, db, t, s;
 
-            if (d == 0)
+            dx = a2.X - a1.X;
+            dy = a2.Y - a1.Y;
+            da = b2.X - b1.X;
+            db = b2.Y - b1.Y;
+
+            if (da * dy - db * dx == 0)
             {
+                // The segments are parallel.
+                //return Vector2.Zero;
                 return false;
             }
 
-            float r = q / d;
+            s = (dx * (b1.Y - a1.Y) + dy * (a1.X - b1.X)) / (da * dy - db * dx);
+            t = (da * (a1.Y - b1.Y) + db * (b1.X - a1.X)) / (db * dx - da * dy);
 
-            q = (l1p1.Y - l2p1.Y) * (l1p2.X - l1p1.X) - (l1p1.X - l2p1.X) * (l1p2.Y - l1p1.Y);
-            float s = q / d;
-
-            if (r < 0 || r > 1 || s < 0 || s > 1)
-            {
+            if ((s >= 0) & (s <= 1) & (t >= 0) & (t <= 1))
+                //return new Vector2((a1.X + t * dx), (a1.Y + t * dy));
+                return true;
+            else
+                //return Vector2.Zero;
                 return false;
-            }
-
-            return true;
         }
     }
 }

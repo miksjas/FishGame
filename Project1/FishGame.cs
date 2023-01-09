@@ -28,9 +28,10 @@ namespace FishGame
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            graphics.PreferredBackBufferWidth = 1024;
+            graphics.PreferredBackBufferWidth = 1024+300;
             graphics.PreferredBackBufferHeight = 768;
             graphics.ApplyChanges();
+            IsMouseVisible= true;
         }
 
         /// <summary>
@@ -52,7 +53,8 @@ namespace FishGame
         /// </summary>
         protected override void LoadContent()
         {
-            Texture2D sensortexture = Obstacle.CreateTexture(GraphicsDevice, 3, 100, pixel => Color.White);
+            Texture2D sensortexture = Obstacle.CreateTexture(GraphicsDevice, 3, 250, pixel => Color.White);
+            Texture2D neuralbackground = Obstacle.CreateTexture(GraphicsDevice, 300, 768, pixel => Color.Black);
             textureDict = new Dictionary<string, Texture2D>();
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
@@ -73,9 +75,13 @@ namespace FishGame
                 speedHorizontal = 5,
                 Colour= Color.Yellow,
             };
-            
-            Sensor c = new Sensor(sensortexture, x, -30);
-            Sensor m = new Sensor(sensortexture, x, 30);
+            Sprite neuralback = new Sprite(neuralbackground)
+            {
+                Position = new Vector2(0, 0)
+        };
+            Sensor c = new Sensor(sensortexture, x, -45);
+            Sensor m = new Sensor(sensortexture, x, 45);
+            Sensor g = new Sensor(sensortexture, x, 0);
             _sprites = new List<Sprite>
             {
                 new Player(playerTexture)
@@ -90,7 +96,7 @@ namespace FishGame
                     Position = new Vector2(100, 100),
                     speedHorizontal = 5,
                 },
-                x, m,c
+                x, m,c,g,neuralback
             };
 
         }
