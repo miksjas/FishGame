@@ -15,6 +15,7 @@ namespace FishGame
     {
         private readonly Texture2D texture;
         private SmartPlayer smartfish;
+        public Vector2 IntersectionPoint;
         public bool isColliding;
         public float rayAngle;
         public Rectangle rotatedRectangle;
@@ -42,6 +43,7 @@ namespace FishGame
                 {
                     if (CheckIfLineIntersects(sprite, rayAngle))
                     {
+                        Debug.WriteLine((GetIntersectionOffset(sprite, rayAngle)));
                         this.isColliding= true;
                     }
 
@@ -52,7 +54,7 @@ namespace FishGame
 
         }
 
-        private bool CheckIfLineIntersects(Sprite sprite,float angle)
+        private bool CheckIfLineIntersects(Sprite sprite, float angle)
         {
             //https://math.stackexchange.com/questions/404407/new-x-coordinate-of-a-rotated-line
             //Point C = PositionVector()
@@ -71,7 +73,23 @@ namespace FishGame
             //
             //new XB = PositionVector().X + ((PositionVector().X) - PositionVector().X) * cos(angle) + ((PositionVector().Y+texture.Height) - PositionVector().Y) * sin(angle)
             // new XY = PositionVector().Y - ((PositionVector().X) - PositionVector().X) * sin(angle) + ((PositionVector().Y+texture.Height) - PositionVector().Y) * cos(angle)
-            return LineIntersectsRect(PositionVector(), new Vector2((float)(PositionVector().X + ((PositionVector().X) - PositionVector().X) * Math.Cos(angle) + ((PositionVector().Y+texture.Height) - PositionVector().Y) * Math.Sin(angle)), (float)(PositionVector().Y - ((PositionVector().X) - PositionVector().X) * Math.Sin(angle) + ((PositionVector().Y+texture.Height) - PositionVector().Y) * Math.Cos(angle))),sprite.Rectangle);
+            return LineIntersectsRect(PositionVector(), new Vector2((float)(PositionVector().X + ((PositionVector().X) - PositionVector().X) * Math.Cos(angle) + ((PositionVector().Y+texture.Height) - PositionVector().Y) * Math.Sin(angle)), (float)(PositionVector().Y - ((PositionVector().X) - PositionVector().X) * Math.Sin(angle) + ((PositionVector().Y+texture.Height) - PositionVector().Y) * Math.Cos(angle))), sprite.Rectangle);
+        }
+        private Vector2 VectCheckIfLineIntersects(Sprite sprite, float angle)
+        {
+
+            return GetIntersection(PositionVector(), new Vector2((float)(PositionVector().X + ((PositionVector().X) - PositionVector().X) * Math.Cos(angle) + ((PositionVector().Y+texture.Height) - PositionVector().Y) * Math.Sin(angle)), (float)(PositionVector().Y - ((PositionVector().X) - PositionVector().X) * Math.Sin(angle) + ((PositionVector().Y+texture.Height) - PositionVector().Y) * Math.Cos(angle))), sprite.Rectangle);
+        }
+        private float GetIntersectionOffset(Sprite sprite, float angle)
+        {   
+            Vector2 startingPoint= Vector2.Zero;
+            Vector2 intersection = Vector2.Zero;
+            float offset = 0;
+            startingPoint = PositionVector();
+            intersection = GetIntersection(PositionVector(), new Vector2((float)(PositionVector().X + ((PositionVector().X) - PositionVector().X) * Math.Cos(angle) + ((PositionVector().Y+texture.Height) - PositionVector().Y) * Math.Sin(angle)), (float)(PositionVector().Y - ((PositionVector().X) - PositionVector().X) * Math.Sin(angle) + ((PositionVector().Y+texture.Height) - PositionVector().Y) * Math.Cos(angle))), sprite.Rectangle);
+            float distance = ((startingPoint.X-intersection.X)*(startingPoint.X-intersection.X)+(startingPoint.Y-intersection.Y)*(startingPoint.Y-intersection.Y));
+            offset = (float)(Math.Sqrt(distance) / texture.Height);
+            return offset;
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -83,7 +101,7 @@ namespace FishGame
             {
                 DrawRay(spriteBatch);
             }
-            
+
         }
 
         private void DrawRay(SpriteBatch spriteBatch)
@@ -119,9 +137,28 @@ namespace FishGame
 
 
         }
+        private static Vector2 GetIntersection(Vector2 p1, Vector2 p2, Rectangle r)
+        {
+            Vector2 intersect = new();
+
+            intersect = VectLineIntersectsLine(p1,p2, new Vector2(r.X, r.Y), new Vector2(r.X + r.Width, r.Y));
+            if (intersect == Vector2.Zero)
+            {
+                intersect = VectLineIntersectsLine(p1, p2, new Vector2(r.X + r.Width, r.Y), new Vector2(r.X + r.Width, r.Y + r.Height));
+            }
+            if (intersect == Vector2.Zero)
+            {
+                intersect = VectLineIntersectsLine(p1, p2, new Vector2(r.X + r.Width, r.Y + r.Height), new Vector2(r.X, r.Y + r.Height));
+            }
+            if (intersect == Vector2.Zero)
+            {
+                intersect = VectLineIntersectsLine(p1, p2, new Vector2(r.X, r.Y + r.Height), new Vector2(r.X, r.Y));
+            }
+            return intersect;
+        }
         public static bool LineIntersectsRect(Vector2 p1, Vector2 p2, Rectangle r)
         {
-            
+
             return LineIntersectsLine(p1, p2, new Vector2(r.X, r.Y), new Vector2(r.X + r.Width, r.Y)) ||
                    LineIntersectsLine(p1, p2, new Vector2(r.X + r.Width, r.Y), new Vector2(r.X + r.Width, r.Y + r.Height)) ||
                    LineIntersectsLine(p1, p2, new Vector2(r.X + r.Width, r.Y + r.Height), new Vector2(r.X, r.Y + r.Height)) ||
@@ -149,11 +186,45 @@ namespace FishGame
             t = (da * (a1.Y - b1.Y) + db * (b1.X - a1.X)) / (db * dx - da * dy);
 
             if ((s >= 0) & (s <= 1) & (t >= 0) & (t <= 1))
-                //return new Vector2((a1.X + t * dx), (a1.Y + t * dy));
+            {
+                //return new Vector2(a1.X + t * dx, (a1.Y + t * dy));
                 return true;
+
+            }
+
+
             else
                 //return Vector2.Zero;
                 return false;
+        }
+        private static Vector2 VectLineIntersectsLine(Vector2 a1, Vector2 a2, Vector2 b1, Vector2 b2)
+        {
+            float dx, dy, da, db, t, s;
+
+            dx = a2.X - a1.X;
+            dy = a2.Y - a1.Y;
+            da = b2.X - b1.X;
+            db = b2.Y - b1.Y;
+
+            if (da * dy - db * dx == 0)
+            {
+                // The segments are parallel.
+                //return Vector2.Zero;
+                return Vector2.Zero;
+            }
+
+            s = (dx * (b1.Y - a1.Y) + dy * (a1.X - b1.X)) / (da * dy - db * dx);
+            t = (da * (a1.Y - b1.Y) + db * (b1.X - a1.X)) / (db * dx - da * dy);
+
+            if ((s >= 0) & (s <= 1) & (t >= 0) & (t <= 1))
+            {
+                return new Vector2(a1.X + t * dx, (a1.Y + t * dy));
+
+            }
+
+
+            else
+                return Vector2.Zero;
         }
     }
 }

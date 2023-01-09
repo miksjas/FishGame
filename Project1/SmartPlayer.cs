@@ -23,7 +23,6 @@ namespace FishGame
         public override void Update(GameTime gameTime, List<Sprite> sprites)
         {
             //Debug.WriteLine(this.Position.X + " " + this.Position.Y + " ");
-            Debug.WriteLine(Sensors[1].isColliding);
             Move();
             if (!gameOver)
             {
@@ -33,7 +32,6 @@ namespace FishGame
                     {
                         if (sprite.Rectangle.Intersects(this.Rectangle))
                         {
-                            Debug.WriteLine("jeff");
                             gameOver= true;
                         }
                     }
