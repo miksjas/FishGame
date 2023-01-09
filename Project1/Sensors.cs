@@ -17,6 +17,7 @@ namespace FishGame
         private SmartPlayer smartfish;
         public Vector2 IntersectionPoint;
         public bool isColliding;
+        private float collidingOffset;
         public float rayAngle;
         public Rectangle rotatedRectangle;
 
@@ -37,14 +38,16 @@ namespace FishGame
 
 
             this.isColliding=false;
+            this.collidingOffset = 0;
             foreach (var sprite in sprites)
             {
                 if (sprite is not Player && (sprite is not Sensor))
                 {
                     if (CheckIfLineIntersects(sprite, rayAngle))
                     {
-                        Debug.WriteLine((GetIntersectionOffset(sprite, rayAngle)));
+                        this.collidingOffset = GetIntersectionOffset(sprite, rayAngle);
                         this.isColliding= true;
+                        Debug.WriteLine(collidingOffset);
                     }
 
                 }
@@ -177,8 +180,6 @@ namespace FishGame
 
             if (da * dy - db * dx == 0)
             {
-                // The segments are parallel.
-                //return Vector2.Zero;
                 return false;
             }
 
@@ -187,14 +188,12 @@ namespace FishGame
 
             if ((s >= 0) & (s <= 1) & (t >= 0) & (t <= 1))
             {
-                //return new Vector2(a1.X + t * dx, (a1.Y + t * dy));
                 return true;
 
             }
 
 
             else
-                //return Vector2.Zero;
                 return false;
         }
         private static Vector2 VectLineIntersectsLine(Vector2 a1, Vector2 a2, Vector2 b1, Vector2 b2)

@@ -20,7 +20,7 @@ namespace FishGame
         public Level(int inputCount, int outputCount)
         {
 
-    }
+        }
 
     }
 }
