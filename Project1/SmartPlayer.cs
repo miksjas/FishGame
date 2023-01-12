@@ -18,14 +18,10 @@ namespace FishGame
         private Texture2D sensorTexture;
         private Network brain;
         private float[] offsets;
-        public SmartPlayer(Texture2D texture, Texture2D sensortexture, int sensorAmount) : base(texture)
+        public SmartPlayer(Texture2D texture) : base(texture)
         {
 
             this.brain = new Network(new int[] {this.Sensors.Count, 6, 4});
-            for (int i = 0; i < sensorAmount; i++)
-            {
-                Sensors.Add(new Sensor(sensortexture, this, -30+30*i));
-            }
 
         }
         public override void Update(GameTime gameTime, List<Sprite> sprites)

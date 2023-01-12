@@ -19,7 +19,7 @@ namespace FishGame
         SpriteBatch spriteBatch;
         Texture2D redRectangle;
 
-        private List<Sprite> _sprites;
+        public List<Sprite> _sprites;
         public Dictionary<string, Texture2D> textureDict;
         public float currentTime;
         float countDuration = 2f;

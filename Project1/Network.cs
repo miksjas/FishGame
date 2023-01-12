@@ -31,25 +31,20 @@ namespace FishGame
 
     class Level
     {
-        private float[] inputs;
-        private float[] outputs;
-        private float[] biases;
-        private float[][] weights;
+        public float[] inputs;
+        public float[] outputs;
+        public float[] biases;
+        public float[][] weights;
         private Random rand = new();
         public Level(int inputCount, int outputCount)
         {
             this.inputs=new float[inputCount];
             this.outputs=new float[outputCount];
             this.biases=new float[outputCount];
-
+            this.weights=new float[inputCount][];
             for (int i = 0; i<inputCount; i++)
             {
                 this.weights[i]=new float[outputCount];
-            }
-
-            for (int i = 0; i < inputCount; i++)
-            {
-
             }
 
         }
