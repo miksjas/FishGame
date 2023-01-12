@@ -62,7 +62,7 @@ namespace FishGame
             var playerTexture = Content.Load<Texture2D>("fish-smallest");
             textureDict.Add(playerTexture.Name, playerTexture);
 
-            SmartPlayer x = new SmartPlayer(playerTexture, sensortexture)
+            SmartPlayer x = new SmartPlayer(playerTexture,sensortexture, 3)
             {
                 Input = new Input()
                 {
@@ -79,9 +79,7 @@ namespace FishGame
             {
                 Position = new Vector2(0, 0)
         };
-            Sensor c = new Sensor(sensortexture, x, -45);
-            Sensor m = new Sensor(sensortexture, x, 45);
-            Sensor g = new Sensor(sensortexture, x, 0);
+
             _sprites = new List<Sprite>
             {
                 new Player(playerTexture)
@@ -96,7 +94,7 @@ namespace FishGame
                     Position = new Vector2(100, 100),
                     speedHorizontal = 5,
                 },
-                x, m,c,g,neuralback
+                x,neuralback
             };
 
         }

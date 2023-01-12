@@ -17,7 +17,7 @@ namespace FishGame
         private SmartPlayer smartfish;
         public Vector2 IntersectionPoint;
         public bool isColliding;
-        private float collidingOffset;
+        public float collidingOffset;
         public float rayAngle;
         public Rectangle rotatedRectangle;
 
@@ -64,35 +64,32 @@ namespace FishGame
             //Point A = (PositionVector().X+texture.Height), PositionVector().Y)
             //XC = PositionVector().X
             //YC = PositionVector().Y
-            //old XA = (PositionVector().X+texture.Height)
-            //old YA = PositionVector().Y
-
             //XB = PositionVector().X + ((PositionVector().X+texture.Height) - PositionVector().X) * cos(angle) + (PositionVector().Y - PositionVector().Y) * sin(angle)
             //YB = PositionVector().Y - ((PositionVector().X+texture.Height) - PositionVector().X) * sin(angle) + (PositionVector().Y - PositionVector().Y) * cos(angle)
 
-
             //new XA = (PositionVector().X)
             //new YA = (PositionVector().Y+texture.Height)
-            //
+
             //new XB = PositionVector().X + ((PositionVector().X) - PositionVector().X) * cos(angle) + ((PositionVector().Y+texture.Height) - PositionVector().Y) * sin(angle)
             // new XY = PositionVector().Y - ((PositionVector().X) - PositionVector().X) * sin(angle) + ((PositionVector().Y+texture.Height) - PositionVector().Y) * cos(angle)
-            return LineIntersectsRect(PositionVector(), new Vector2((float)(PositionVector().X + ((PositionVector().X) - PositionVector().X) * Math.Cos(angle) + ((PositionVector().Y+texture.Height) - PositionVector().Y) * Math.Sin(angle)), (float)(PositionVector().Y - ((PositionVector().X) - PositionVector().X) * Math.Sin(angle) + ((PositionVector().Y+texture.Height) - PositionVector().Y) * Math.Cos(angle))), sprite.Rectangle);
+            return LineIntersectsRect(PositionVector(), new Vector2((float)(PositionVector().X + ((PositionVector().X) - PositionVector().X) * Math.Cos(angle) + ((PositionVector().Y+texture.Height)
+                - PositionVector().Y) * Math.Sin(angle)), (float)(PositionVector().Y - ((PositionVector().X) - PositionVector().X) * Math.Sin(angle)
+                + (PositionVector().Y+texture.Height - PositionVector().Y)
+                * Math.Cos(angle))), sprite.Rectangle);
         }
-        private Vector2 VectCheckIfLineIntersects(Sprite sprite, float angle)
-        {
 
-            return GetIntersection(PositionVector(), new Vector2((float)(PositionVector().X + ((PositionVector().X) - PositionVector().X) * Math.Cos(angle) + ((PositionVector().Y+texture.Height) - PositionVector().Y) * Math.Sin(angle)), (float)(PositionVector().Y - ((PositionVector().X) - PositionVector().X) * Math.Sin(angle) + ((PositionVector().Y+texture.Height) - PositionVector().Y) * Math.Cos(angle))), sprite.Rectangle);
-        }
         private float GetIntersectionOffset(Sprite sprite, float angle)
         {   
             Vector2 startingPoint= Vector2.Zero;
             Vector2 intersection = Vector2.Zero;
             float offset = 0;
             startingPoint = PositionVector();
-            intersection = GetIntersection(PositionVector(), new Vector2((float)(PositionVector().X + ((PositionVector().X) - PositionVector().X) * Math.Cos(angle) + ((PositionVector().Y+texture.Height) - PositionVector().Y) * Math.Sin(angle)), (float)(PositionVector().Y - ((PositionVector().X) - PositionVector().X) * Math.Sin(angle) + ((PositionVector().Y+texture.Height) - PositionVector().Y) * Math.Cos(angle))), sprite.Rectangle);
+            intersection = GetIntersection(PositionVector(), new Vector2((float)(PositionVector().X + ((PositionVector().X) - PositionVector().X) * Math.Cos(angle)
+                + ((PositionVector().Y+texture.Height) - PositionVector().Y) * Math.Sin(angle)), (float)(PositionVector().Y - ((PositionVector().X) - PositionVector().X)
+                * Math.Sin(angle) + ((PositionVector().Y+texture.Height) - PositionVector().Y) * Math.Cos(angle))), sprite.Rectangle);
             float distance = ((startingPoint.X-intersection.X)*(startingPoint.X-intersection.X)+(startingPoint.Y-intersection.Y)*(startingPoint.Y-intersection.Y));
             offset = (float)(Math.Sqrt(distance) / texture.Height);
-            return offset;
+            return 1-offset;
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -126,6 +123,7 @@ namespace FishGame
             }
 
         }
+        //utility
         public static double ConvertToRadians(double angle)
         {
             return (Math.PI / 180) * angle;
@@ -140,25 +138,8 @@ namespace FishGame
 
 
         }
-        private static Vector2 GetIntersection(Vector2 p1, Vector2 p2, Rectangle r)
-        {
-            Vector2 intersect = new();
+        //fix this somehow
 
-            intersect = VectLineIntersectsLine(p1,p2, new Vector2(r.X, r.Y), new Vector2(r.X + r.Width, r.Y));
-            if (intersect == Vector2.Zero)
-            {
-                intersect = VectLineIntersectsLine(p1, p2, new Vector2(r.X + r.Width, r.Y), new Vector2(r.X + r.Width, r.Y + r.Height));
-            }
-            if (intersect == Vector2.Zero)
-            {
-                intersect = VectLineIntersectsLine(p1, p2, new Vector2(r.X + r.Width, r.Y + r.Height), new Vector2(r.X, r.Y + r.Height));
-            }
-            if (intersect == Vector2.Zero)
-            {
-                intersect = VectLineIntersectsLine(p1, p2, new Vector2(r.X, r.Y + r.Height), new Vector2(r.X, r.Y));
-            }
-            return intersect;
-        }
         public static bool LineIntersectsRect(Vector2 p1, Vector2 p2, Rectangle r)
         {
 
@@ -195,6 +176,25 @@ namespace FishGame
 
             else
                 return false;
+        }
+        private static Vector2 GetIntersection(Vector2 p1, Vector2 p2, Rectangle r)
+        {
+            Vector2 intersect = new();
+
+            intersect = VectLineIntersectsLine(p1, p2, new Vector2(r.X, r.Y), new Vector2(r.X + r.Width, r.Y));
+            if (intersect == Vector2.Zero)
+            {
+                intersect = VectLineIntersectsLine(p1, p2, new Vector2(r.X + r.Width, r.Y), new Vector2(r.X + r.Width, r.Y + r.Height));
+            }
+            if (intersect == Vector2.Zero)
+            {
+                intersect = VectLineIntersectsLine(p1, p2, new Vector2(r.X + r.Width, r.Y + r.Height), new Vector2(r.X, r.Y + r.Height));
+            }
+            if (intersect == Vector2.Zero)
+            {
+                intersect = VectLineIntersectsLine(p1, p2, new Vector2(r.X, r.Y + r.Height), new Vector2(r.X, r.Y));
+            }
+            return intersect;
         }
         private static Vector2 VectLineIntersectsLine(Vector2 a1, Vector2 a2, Vector2 b1, Vector2 b2)
         {

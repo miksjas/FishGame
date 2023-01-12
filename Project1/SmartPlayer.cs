@@ -16,13 +16,28 @@ namespace FishGame
 
         public List<Sensor> Sensors = new List<Sensor> { };
         private Texture2D sensorTexture;
-        public SmartPlayer(Texture2D texture, Texture2D sensorTexture) : base(texture)
+        private Network brain;
+        private float[] offsets;
+        public SmartPlayer(Texture2D texture, Texture2D sensortexture, int sensorAmount) : base(texture)
         {
-            this.sensorTexture=sensorTexture;
+
+            this.brain = new Network(new int[] {this.Sensors.Count, 6, 4});
+            for (int i = 0; i < sensorAmount; i++)
+            {
+                Sensors.Add(new Sensor(sensortexture, this, -30+30*i));
+            }
+
         }
         public override void Update(GameTime gameTime, List<Sprite> sprites)
         {
             //Debug.WriteLine(this.Position.X + " " + this.Position.Y + " ");
+            foreach (Sensor sensor in Sensors)
+            {
+                if (sensor.collidingOffset == 0)
+                {
+
+                }
+            }
             Move();
             if (!gameOver)
             {
