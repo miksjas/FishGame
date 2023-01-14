@@ -18,22 +18,31 @@ namespace FishGame
         private Texture2D sensorTexture;
         private Network brain;
         private float[] offsets;
+        private float[] outputs;
         public SmartPlayer(Texture2D texture) : base(texture)
         {
 
-            this.brain = new Network(new int[] {this.Sensors.Count, 6, 4});
+            this.brain = new Network(new int[] {5,6,4});
+
 
         }
         public override void Update(GameTime gameTime, List<Sprite> sprites)
         {
             //Debug.WriteLine(this.Position.X + " " + this.Position.Y + " ");
+
+            this.offsets = new float[Sensors.Count];
+
+            int i = 0;
             foreach (Sensor sensor in Sensors)
             {
-                if (sensor.collidingOffset == 0)
-                {
-
-                }
+                offsets[i++] = sensor.collidingOffset;
             }
+            foreach (var item in offsets)
+            {
+                Debug.WriteLine(("[{0}]", string.Join(", ", offsets)));
+            }
+            this.outputs = Network.FeedForward(offsets, this.brain);
+            //Debug.WriteLine(this.brain);
             Move();
             if (!gameOver)
             {
@@ -55,12 +64,12 @@ namespace FishGame
 
 
 
-                    if (this.Velocity.Y < 0 && (this.Position.Y < 0) ||
-                    (this.Velocity.Y > 0 & (this.Position.Y > 768 - sprite.Rectangle.Height)))
+                    if (this.Velocity.Y < 0 && (this.Position.Y < +200) ||
+                    (this.Velocity.Y > 0 & (this.Position.Y > 768-200 - sprite.Rectangle.Height)))
                         this.Velocity.Y = 0;
 
                 if (this.Velocity.X < 0 && (this.Position.X < 301) ||
-                    (this.Velocity.X > 0 & (this.Position.X > 1024+550 - sprite.Rectangle.Width)))
+                    (this.Velocity.X > 0 & (this.Position.X > 1024+350 - sprite.Rectangle.Width)))
                     this.Velocity.X = 0;
             }
 
@@ -71,6 +80,27 @@ namespace FishGame
         private void Move()
         {
             {
+/*                if (this.outputs[0] == 1)
+                {
+                    Velocity.X = -speedHorizontal;
+                }
+
+                if (this.outputs[1] == 1)
+                {
+                    Velocity.X = speedHorizontal;
+                }
+                if (this.outputs[2] == 1)
+                {
+                    Velocity.Y = -speedHorizontal;
+                }
+
+                if (this.outputs[3] == 1)
+                {
+                    Velocity.Y = speedHorizontal;
+                }*/
+
+
+
                 if (Keyboard.GetState().IsKeyDown(Input.Left))
                     Velocity.X = -speedHorizontal;
                 else if (Keyboard.GetState().IsKeyDown(Input.Right))

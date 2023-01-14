@@ -19,10 +19,10 @@ namespace FishGame
         SpriteBatch spriteBatch;
         Texture2D redRectangle;
 
-        public List<Sprite> _sprites;
+        private List<Sprite> _sprites;
         public Dictionary<string, Texture2D> textureDict;
         public float currentTime;
-        float countDuration = 2f;
+        float countDuration = 1.2f;
         int counter = 1;
         public FishGame()
         {
@@ -62,41 +62,34 @@ namespace FishGame
             var playerTexture = Content.Load<Texture2D>("fish-smallest");
             textureDict.Add(playerTexture.Name, playerTexture);
 
-            SmartPlayer x = new SmartPlayer(playerTexture,sensortexture, 3)
-            {
-                Input = new Input()
-                {
-                    Left = Keys.Left,
-                    Right = Keys.Right,
-                    Up = Keys.Up,
-                    Down = Keys.Down,
-                },
-                Position = new Vector2(300, 100),
-                speedHorizontal = 5,
-                Colour= Color.Yellow,
-            };
+
             Sprite neuralback = new Sprite(neuralbackground)
             {
                 Position = new Vector2(0, 0)
-        };
+            };
+
 
             _sprites = new List<Sprite>
             {
-                new Player(playerTexture)
-                {
-                    Input = new Input()
-                    {
-                        Left = Keys.A,
-                        Right = Keys.D,
-                        Up = Keys.W,
-                        Down = Keys.S,
-                    },
-                    Position = new Vector2(100, 100),
-                    speedHorizontal = 5,
-                },
-                x,neuralback
+                neuralback,
             };
 
+            for (int i = 0; i<1; i++)
+            {
+                var fish = new SmartPlayer(playerTexture)
+                {
+                    Position = new Vector2(400, 250),
+                    speedHorizontal = 5,
+                    Colour= Color.Yellow,
+                };
+                _sprites.Add(fish);
+                for (int b = 0; b<5; b++)
+                {
+                    var sens = new Sensor(sensortexture, fish, -70+28*b);
+                    _sprites.Add(sens);
+
+                }
+            }
         }
 
         public void CreateObstacle()

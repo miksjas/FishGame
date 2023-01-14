@@ -60,9 +60,9 @@ namespace FishGame
         public static List<int> CalculateRandomRectangleParameters() {
             List<int> parameters = new List<int>();
             Random rnd = new Random();
-            int height = rnd.Next(64, 200);
+            int height = rnd.Next(64, 100);
             int width = rnd.Next(height-20, height);
-            int speed = rnd.Next(-5, -1);
+            int speed = rnd.Next(-3, -1);
             int X = 1500;
             int Y = rnd.Next(0, 768);
             parameters.Add(height);

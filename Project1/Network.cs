@@ -17,7 +17,7 @@ namespace FishGame
                 this.levels.Add(new Level(neuronCounts[i], neuronCounts[i+1]));
             }
         }
-        private static float[] FeedForward(float[] givenInputs,Network network)
+        public static float[] FeedForward(float[] givenInputs,Network network)
         {
             float[] outputs = Level.FeedForwardAlg(givenInputs, network.levels[0]);
             for(int i=1; i<network.levels.Count(); i++)
@@ -35,7 +35,6 @@ namespace FishGame
         public float[] outputs;
         public float[] biases;
         public float[][] weights;
-        private Random rand = new();
         public Level(int inputCount, int outputCount)
         {
             this.inputs=new float[inputCount];
@@ -45,21 +44,24 @@ namespace FishGame
             for (int i = 0; i<inputCount; i++)
             {
                 this.weights[i]=new float[outputCount];
-            }
+                //this.weights
 
+            }
+            Level.RandomizeLevel(this);
         }
         private static void RandomizeLevel(Level level)
         {
+            Random rand = new();
             for (int i = 0; i < level.inputs.Length; i++)
             {
                 for (int j = 0; j < level.outputs.Length; j++)
                 {
-                    level.weights[i][j]=(float)level.rand.NextDouble()*2-1;
+                    level.weights[i][j]=(float)rand.NextDouble()*2-1;
                 }
             }
             for (int i = 0; i < level.biases.Length; i++)
             {
-                level.biases[i]=(float)level.rand.NextDouble()*2-1;
+                level.biases[i]=(float)rand.NextDouble()*2-1;
             }
         }
         public static float[] FeedForwardAlg(float[] givenInputs, Level level)
