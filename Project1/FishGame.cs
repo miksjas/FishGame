@@ -26,7 +26,7 @@ namespace FishGame
 
         public Dictionary<string, Texture2D> textureDict;
         public float currentTime;
-        public Network currentNetwork;
+        public SmartPlayer currentFish;
         float countDuration = 1.2f;
         int counter = 1;
         public FishGame()
@@ -91,7 +91,7 @@ namespace FishGame
 
             };
 
-            for (int i = 0; i<1; i++)
+            for (int i = 0; i<10; i++)
             {
                 var fish = new SmartPlayer(playerTexture)
                 {
@@ -108,7 +108,7 @@ namespace FishGame
                 };
                 _sprites.Add(fish);
                 _smartFishes.Add(fish);
-                currentNetwork = fish.brain;
+                currentFish = fish;
 
                 for (int b = 0; b<6; b++)
                 {
@@ -155,26 +155,31 @@ namespace FishGame
             {
                 if (_smartFishes.Count() > index+1)
                 {
-                    currentNetwork = _smartFishes[index+1].brain;
-                    _smartFishes[index].isCurrent = false;
-                    _smartFishes[index+1].isCurrent = true;
+                    foreach (var fish in _smartFishes)
+                        fish.isCurrent= false;
+                    currentFish = _smartFishes[index+1];
+                    currentFish.isCurrent= true;
+
                     index = index+1;
                     }
             }
             else if (Keyboard.GetState().IsKeyDown(Keys.Left))
             {
-                if (index - 1 > 0)
+                if (index - 1 >= 0)
                 {
-                    currentNetwork = _smartFishes[index-1].brain;
-                    _smartFishes[index].isCurrent = false;
-                    _smartFishes[index-1].isCurrent = true;
+                    foreach (var fish in _smartFishes)
+                        fish.isCurrent= false;
+                    currentFish = _smartFishes[index-1];
+                    currentFish.isCurrent= true;
+
                     index = index-1;
+
+
 
                 }
 
 
             }
-
             foreach (var sprite in _sprites)
             {
 
@@ -209,7 +214,7 @@ namespace FishGame
 
             foreach (var sprite in _sprites)
                 sprite.Draw(spriteBatch);
-            visualization.Draw(spriteBatch, currentNetwork);
+            visualization.Draw(spriteBatch, currentFish, _smartFishes);
             spriteBatch.End();
 
             base.Draw(gameTime);

@@ -43,16 +43,16 @@ namespace FishGame
 
 
         }
-        public void Draw(SpriteBatch spriteBatch, Network network, List<SmartPlayer> fishes = null)
+        public void Draw(SpriteBatch spriteBatch, SmartPlayer smartfish, List<SmartPlayer> fishes = null)
         {
-            this.levels = network.levels;
+           this.levels = smartfish.brain.levels;
             spriteBatch.Draw(neuralbackground, new Vector2(0, 0), null, Color.Yellow, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.4f);
             drawNetwork(spriteBatch, levels);
-            spriteBatch.DrawString(defaultFont, "Network of Smartfish: " , new Vector2 (15,30),Color.White,0f,Vector2.Zero,1f,SpriteEffects.None,0.1f);
-            spriteBatch.DrawString(defaultFont, "UP", new Vector2(150, 30), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
-            spriteBatch.DrawString(defaultFont, "DOWN", new Vector2(150, 60), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
-            spriteBatch.DrawString(defaultFont, "LEFT", new Vector2(150, 80), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
-            spriteBatch.DrawString(defaultFont, "RIGHT", new Vector2(150, 100), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
+            spriteBatch.DrawString(defaultFont, "Network of Smartfish: " + fishes.IndexOf(smartfish) , new Vector2 (5,10),Color.White,0f,Vector2.Zero,1.2f,SpriteEffects.None,0.1f);
+            spriteBatch.DrawString(defaultFont, "UP", new Vector2(23, 130), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
+            spriteBatch.DrawString(defaultFont, "DOWN", new Vector2(86, 130), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
+            spriteBatch.DrawString(defaultFont, "LEFT", new Vector2(170, 130), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
+            spriteBatch.DrawString(defaultFont, "RIGHT", new Vector2(255, 130), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
 
 
             /*            spriteBatch.Draw(circle, new Vector2(15, 150), null, Color.Yellow*0.8f, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
@@ -118,7 +118,7 @@ namespace FishGame
                 float x = Lerp(margin, right, by);
                 spriteBatch.Draw(circleOutline, new Vector2(x, top), null, Color.Yellow*0.8f, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
                 spriteBatch.Draw(circleFilled, new Vector2(x+1, top+1), null, Color.Black, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
-                spriteBatch.Draw(circleFilled, new Vector2(x+1, top+1), null, Color.Red*(float)levels[0].outputs[i], 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+                spriteBatch.Draw(circleFilled, new Vector2(x+1, top+1), null, Color.Red*(float)levels[1].outputs[i], 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
 
 
 

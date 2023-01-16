@@ -24,7 +24,7 @@ namespace FishGame
         public SmartPlayer(Texture2D texture) : base(texture)
         {
 
-            this.brain = new Network(new int[] {5,6,4});
+            this.brain = new Network(new int[] {6,6,4});
 
 
         }
@@ -81,29 +81,29 @@ namespace FishGame
         private void Move()
         {
             {
-                /*                if (this.outputs[2] == 1)
-                                {
-                                    //left
-                                    Velocity.X = -speedHorizontal;
-                                }
+                if (this.outputs[1] == 1)
+                {
+                    //left
+                    Velocity.X = -speedHorizontal;
+                }
 
-                                if (this.outputs[1] == 1)
-                                {
-                                    //right
-                                    Velocity.X = speedHorizontal;
-                                }
-                                if (this.outputs[0] == 1)
-                                {
-                                    //up
-                                    Velocity.Y = -speedHorizontal;
-                                }
+                if (this.outputs[2] == 1)
+                {
+                    //right
+                    Velocity.X = speedHorizontal;
+                }
+                if (this.outputs[0] == 1)
+                {
+                    //up
+                    Velocity.Y = -speedHorizontal;
+                }
 
-                                if (this.outputs[3] == 1)
-                                {
-                                    //down
-                                    Velocity.Y = speedHorizontal;
-                                }
-                */
+                if (this.outputs[3] == 1)
+                {
+                    //down
+                    Velocity.Y = speedHorizontal;
+                }
+
 
 
                 if (Keyboard.GetState().IsKeyDown(Input.Left))
