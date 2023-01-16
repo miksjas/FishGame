@@ -62,7 +62,8 @@ namespace FishGame
             textureDict = new Dictionary<string, Texture2D>();
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            this.visualization = new Visualization(GraphicsDevice);
+            SpriteFont defaultFont = Content.Load<SpriteFont>("defaultFont");
+            this.visualization = new Visualization(GraphicsDevice, defaultFont);
 
             var playerTexture = Content.Load<Texture2D>("fish-smallest");
             textureDict.Add(playerTexture.Name, playerTexture);
@@ -90,7 +91,7 @@ namespace FishGame
 
             };
 
-            for (int i = 0; i<10; i++)
+            for (int i = 0; i<1; i++)
             {
                 var fish = new SmartPlayer(playerTexture)
                 {
@@ -149,7 +150,7 @@ namespace FishGame
         protected override void Update(GameTime gameTime)
         {
 
-
+            //skip fish if dead
             if (Keyboard.GetState().IsKeyDown(Keys.Right))
             {
                 if (_smartFishes.Count() > index+1)

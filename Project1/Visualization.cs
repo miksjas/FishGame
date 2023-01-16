@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net.Mime;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,7 +17,7 @@ namespace FishGame
         private List<Level> levels;
         private Texture2D circleOutline;
         private Texture2D circleFilled;
-
+        private SpriteFont defaultFont;
         private Texture2D singlePixel;
         Texture2D neuralbackground;
         private GraphicsDevice graphics;
@@ -26,7 +27,7 @@ namespace FishGame
         private int middle = 384;
         private int right = 255;
 
-        public Visualization(GraphicsDevice graphics)
+        public Visualization(GraphicsDevice graphics, SpriteFont defaultFont)
 
         {
             this.neuralbackground = Obstacle.CreateTexture(graphics, 300, 768, pixel => Color.Black);
@@ -34,8 +35,7 @@ namespace FishGame
             this.graphics = graphics;
             this.circleOutline = CreateCircleOutline(15);
             this.circleFilled= CreateCircleFilled(14);
-
-
+            this.defaultFont = defaultFont;
         }
 
         public void Update(GameTime gameTime, List<Sprite> sprites)
@@ -43,12 +43,16 @@ namespace FishGame
 
 
         }
-        public void Draw(SpriteBatch spriteBatch, Network network)
+        public void Draw(SpriteBatch spriteBatch, Network network, List<SmartPlayer> fishes = null)
         {
             this.levels = network.levels;
             spriteBatch.Draw(neuralbackground, new Vector2(0, 0), null, Color.Yellow, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.4f);
             drawNetwork(spriteBatch, levels);
-
+            spriteBatch.DrawString(defaultFont, "Network of Smartfish: " , new Vector2 (15,30),Color.White,0f,Vector2.Zero,1f,SpriteEffects.None,0.1f);
+            spriteBatch.DrawString(defaultFont, "UP", new Vector2(150, 30), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
+            spriteBatch.DrawString(defaultFont, "DOWN", new Vector2(150, 60), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
+            spriteBatch.DrawString(defaultFont, "LEFT", new Vector2(150, 80), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
+            spriteBatch.DrawString(defaultFont, "RIGHT", new Vector2(150, 100), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
 
 
             /*            spriteBatch.Draw(circle, new Vector2(15, 150), null, Color.Yellow*0.8f, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);

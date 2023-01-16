@@ -81,28 +81,32 @@ namespace FishGame
         private void Move()
         {
             {
-                if (this.outputs[0] == 1)
-                {
-                    Velocity.X = -speedHorizontal;
-                }
+                /*                if (this.outputs[2] == 1)
+                                {
+                                    //left
+                                    Velocity.X = -speedHorizontal;
+                                }
 
-                if (this.outputs[1] == 1)
-                {
-                    Velocity.X = speedHorizontal;
-                }
-                if (this.outputs[2] == 1)
-                {
-                    Velocity.Y = -speedHorizontal;
-                }
+                                if (this.outputs[1] == 1)
+                                {
+                                    //right
+                                    Velocity.X = speedHorizontal;
+                                }
+                                if (this.outputs[0] == 1)
+                                {
+                                    //up
+                                    Velocity.Y = -speedHorizontal;
+                                }
 
-                if (this.outputs[3] == 1)
-                {
-                    Velocity.Y = speedHorizontal;
-                }
+                                if (this.outputs[3] == 1)
+                                {
+                                    //down
+                                    Velocity.Y = speedHorizontal;
+                                }
+                */
 
 
-
-/*                if (Keyboard.GetState().IsKeyDown(Input.Left))
+                if (Keyboard.GetState().IsKeyDown(Input.Left))
                     Velocity.X = -speedHorizontal;
                 else if (Keyboard.GetState().IsKeyDown(Input.Right))
                     Velocity.X = speedHorizontal;
@@ -111,7 +115,7 @@ namespace FishGame
                     Velocity.Y = -speedHorizontal;
                 else if (Keyboard.GetState().IsKeyDown(Input.Down))
                     Velocity.Y = speedHorizontal;
-*/
+
             }
 
         }
