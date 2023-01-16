@@ -1,18 +1,12 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FishGame;
 
 namespace FishGame
 {
     public class Sprite
     {
-        protected Texture2D _texture;
-        public bool gameOver = false;
+        public bool IsNotAlive { get; set; }
 
         public Vector2 Position;
         public Vector2 Velocity;
@@ -22,6 +16,9 @@ namespace FishGame
         public int RectangleHeight;
         public int RectangleWidth;
         public Vector2 Center;
+        
+        protected Texture2D _texture;
+
         public virtual Rectangle Rectangle
         {
             get

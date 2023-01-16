@@ -1,31 +1,25 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Reflection.Metadata;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace FishGame
 {
     public class Sensor : Sprite
     {
         private readonly Texture2D texture;
-        private SmartPlayer smartfish;
+        private FishPlayer smartfish;
         public Vector2 IntersectionPoint;
         public bool isColliding;
         public float collidingOffset;
         public float rayAngle;
         public Rectangle rotatedRectangle;
 
-        public Sensor(Texture2D texture, SmartPlayer smartfish, float angle) : base(texture)
+        public Sensor(Texture2D texture, FishPlayer smartfish, float angle) : base(texture)
         {
-            this.texture=texture;
+            this.texture = texture;
             this.smartfish = smartfish;
-            this.rayAngle=(float)ConvertToRadians(angle+90);
+            this.rayAngle = (float)ConvertToRadians(angle + 90);
             smartfish.Sensors.Add(this);
         }
 
@@ -36,11 +30,11 @@ namespace FishGame
             Move();
             this.Position = PositionVector();
 
-            if (smartfish.gameOver == true)
+            if (smartfish.IsNotAlive == true)
             {
-                this.gameOver = true;
+                this.IsNotAlive = true;
             }
-            this.isColliding=false;
+            this.isColliding = false;
             this.collidingOffset = 0;
             foreach (var sprite in sprites)
             {
@@ -49,7 +43,7 @@ namespace FishGame
                     if (CheckIfLineIntersects(sprite, rayAngle))
                     {
                         this.collidingOffset = GetIntersectionOffset(sprite, rayAngle);
-                        this.isColliding= true;
+                        this.isColliding = true;
                     }
 
                 }
@@ -74,26 +68,26 @@ namespace FishGame
 
             //new XB = PositionVector().X + ((PositionVector().X) - PositionVector().X) * cos(angle) + ((PositionVector().Y+texture.Height) - PositionVector().Y) * sin(angle)
             // new XY = PositionVector().Y - ((PositionVector().X) - PositionVector().X) * sin(angle) + ((PositionVector().Y+texture.Height) - PositionVector().Y) * cos(angle)
-            return LineIntersectsRect(PositionVector(), new Vector2((float)(PositionVector().X + ((PositionVector().X) - PositionVector().X) * Math.Cos(angle) + ((PositionVector().Y+texture.Height)
+            return LineIntersectsRect(PositionVector(), new Vector2((float)(PositionVector().X + ((PositionVector().X) - PositionVector().X) * Math.Cos(angle) + ((PositionVector().Y + texture.Height)
                 - PositionVector().Y) * Math.Sin(angle)), (float)(PositionVector().Y - ((PositionVector().X) - PositionVector().X) * Math.Sin(angle)
-                + (PositionVector().Y+texture.Height - PositionVector().Y)
+                + (PositionVector().Y + texture.Height - PositionVector().Y)
                 * Math.Cos(angle))), sprite.Rectangle);
         }
 
         private float GetIntersectionOffset(Sprite sprite, float angle)
-        {   
-            Vector2 startingPoint= Vector2.Zero;
+        {
+            Vector2 startingPoint = Vector2.Zero;
             Vector2 intersection = Vector2.Zero;
             float offset = 0;
             startingPoint = PositionVector();
             intersection = GetIntersection(PositionVector(), new Vector2((float)(PositionVector().X + ((PositionVector().X) - PositionVector().X) * Math.Cos(angle)
-                + ((PositionVector().Y+texture.Height) - PositionVector().Y) * Math.Sin(angle)), (float)(PositionVector().Y - ((PositionVector().X) - PositionVector().X)
-                * Math.Sin(angle) + ((PositionVector().Y+texture.Height) - PositionVector().Y) * Math.Cos(angle))), sprite.Rectangle);
-            float distance = ((startingPoint.X-intersection.X)*(startingPoint.X-intersection.X)+(startingPoint.Y-intersection.Y)*(startingPoint.Y-intersection.Y));
+                + ((PositionVector().Y + texture.Height) - PositionVector().Y) * Math.Sin(angle)), (float)(PositionVector().Y - ((PositionVector().X) - PositionVector().X)
+                * Math.Sin(angle) + ((PositionVector().Y + texture.Height) - PositionVector().Y) * Math.Cos(angle))), sprite.Rectangle);
+            float distance = ((startingPoint.X - intersection.X) * (startingPoint.X - intersection.X) + (startingPoint.Y - intersection.Y) * (startingPoint.Y - intersection.Y));
             offset = (float)(Math.Sqrt(distance) / texture.Height);
             offset = (float)(offset * 0.2);
-            var noffset = 1-offset;
-            return 1-offset;
+            var noffset = 1 - offset;
+            return 1 - offset;
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -101,20 +95,15 @@ namespace FishGame
             //spriteBatch.Draw(texture, new Vector2(smartfish.Position.X + smartfish.RectangleWidth / 2 ,smartfish.Position.Y + smartfish.RectangleHeight /2 ), this.Rectangle,Color.Yellow, 1.57079633f, new Vector2(texture.Width/2,texture.Height/2),1, SpriteEffects.None,0f);
             //spriteBatch.Draw(texture, new Vector2(300+32+50+,100+25/2), this.Rectangle, Color.Yellow, 1.57079633f, new Vector2(texture.Width/2, texture.Height/2), 1, SpriteEffects.None, 0f);
             //300=smartfish.Position.X     32/2 = smartfish.rectnaglewidth/2  50 = texture.Width/2 16 = smartfish.rectanglewidth/2
-            if (this.smartfish.isCurrent)
+            if (smartfish.IsCurrent)
             {
                 DrawRay(spriteBatch);
-
             }
-
-
         }
 
         private void DrawRay(SpriteBatch spriteBatch)
         {
-
             spriteBatch.Draw(texture, PositionVector(), null, GetColor(), -rayAngle, new Vector2(0, 0), 1, SpriteEffects.None, 1f);
-
         }
 
         private Color GetColor()
@@ -136,7 +125,7 @@ namespace FishGame
         }
         private Vector2 PositionVector()
         {
-            return new Vector2(smartfish.Position.X+smartfish.Rectangle.Width+0, smartfish.Position.Y+smartfish.Rectangle.Height/2+2);
+            return new Vector2(smartfish.Position.X + smartfish.Rectangle.Width + 0, smartfish.Position.Y + smartfish.Rectangle.Height / 2 + 2);
         }
 
         private void Move()

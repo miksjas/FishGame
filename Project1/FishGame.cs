@@ -1,13 +1,8 @@
-﻿
+﻿using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Diagnostics.Metrics;
-using System.Linq;
-using System.Reflection;
 
 namespace FishGame
 {
@@ -21,22 +16,23 @@ namespace FishGame
         Texture2D redRectangle;
         private Visualization visualization;
         private List<Sprite> _sprites;
-        private List<SmartPlayer> _smartFishes;
-        private int index = 0;
+        private List<FishPlayer> _smartFishes;
+        private int counter = 1;
+        private int index = 1;
 
         public Dictionary<string, Texture2D> textureDict;
         public float currentTime;
-        public SmartPlayer currentFish;
         float countDuration = 1.2f;
-        int counter = 1;
+        private int _numberOfFishes = 10;
+
         public FishGame()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            graphics.PreferredBackBufferWidth = 1024+300;
+            graphics.PreferredBackBufferWidth = 1024 + 300;
             graphics.PreferredBackBufferHeight = 768;
             graphics.ApplyChanges();
-            IsMouseVisible= true;
+            IsMouseVisible = true;
         }
 
         /// <summary>
@@ -47,8 +43,6 @@ namespace FishGame
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-
             base.Initialize();
         }
 
@@ -73,27 +67,23 @@ namespace FishGame
                 speedHorizontal = 0,
                 Position = new Vector2(300, 0)
             };
+
             Obstacle bottomborder = new Obstacle(border)
             {
                 speedHorizontal = 0,
                 Position = new Vector2(300, 668)
             };
 
-
-
-
             _sprites = new List<Sprite>
             {
                 topborder,bottomborder
             };
-            _smartFishes = new List<SmartPlayer>
-            {
 
-            };
+            _smartFishes = new List<FishPlayer>();
 
-            for (int i = 0; i<10; i++)
+            for (int i = 0; i < _numberOfFishes; i++)
             {
-                var fish = new SmartPlayer(playerTexture)
+                var fish = new FishPlayer(playerTexture)
                 {
                     Input = new Input()
                     {
@@ -104,18 +94,18 @@ namespace FishGame
                     },
                     Position = new Vector2(400, 250),
                     speedHorizontal = 5,
-                    Colour= Color.Yellow,
+                    Colour = Color.Yellow,
                 };
                 _sprites.Add(fish);
                 _smartFishes.Add(fish);
-                currentFish = fish;
 
-                for (int b = 0; b<6; b++)
+                for (int sensor = 0; sensor < fish.NumberOfSensors; sensor++)
                 {
-                    var sens = new Sensor(sensortexture, fish, -90+36*b);
+                    var sens = new Sensor(sensortexture, fish, Visualization.Lerp(90, -90, (float)sensor / (float)(fish.NumberOfSensors - 1)));
                     _sprites.Add(sens);
                 }
             }
+            _smartFishes[_numberOfFishes - 1].IsCurrent = true;
         }
 
         public void CreateObstacle()
@@ -123,7 +113,7 @@ namespace FishGame
 
             List<int> dimensions = Obstacle.CalculateRandomRectangleParameters();
             Texture2D texture2D = Obstacle.CreateTexture(GraphicsDevice, dimensions[0], dimensions[1], pixel => Color.Red);
-            redRectangle =  texture2D;
+            redRectangle = texture2D;
             _sprites.Add(
                 new Obstacle(redRectangle)
                 {
@@ -131,8 +121,8 @@ namespace FishGame
                     Position = new Vector2(dimensions[3], dimensions[4])
                 }
                 );
-
         }
+
         /// <summary>
         /// UnloadContent will be called once per game and is the place to unload
         /// game-specific content.
@@ -149,37 +139,47 @@ namespace FishGame
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-
             //skip fish if dead
-            if (Keyboard.GetState().IsKeyDown(Keys.Right))
-            {
-                if (_smartFishes.Count() > index+1)
-                {
-                    foreach (var fish in _smartFishes)
-                        fish.isCurrent= false;
-                    currentFish = _smartFishes[index+1];
-                    currentFish.isCurrent= true;
+            int leftRightKeyStatus = 0;
 
-                    index = index+1;
+            if (Keyboard.GetState().IsKeyDown(Keys.Right)) leftRightKeyStatus = 1;
+            if (Keyboard.GetState().IsKeyDown(Keys.Left)) leftRightKeyStatus = -1;
+
+            if (leftRightKeyStatus != 0)
+            {
+                int currentFishIndex = 0;
+                for (int i = 0; i < _smartFishes.Count; i++)
+                {
+                    if (_smartFishes[i].IsCurrent)
+                    {
+                        currentFishIndex = i;
+                        break;
                     }
-            }
-            else if (Keyboard.GetState().IsKeyDown(Keys.Left))
-            {
-                if (index - 1 >= 0)
-                {
-                    foreach (var fish in _smartFishes)
-                        fish.isCurrent= false;
-                    currentFish = _smartFishes[index-1];
-                    currentFish.isCurrent= true;
-
-                    index = index-1;
-
-
-
                 }
+                
+                _smartFishes[currentFishIndex].IsCurrent = false;
 
+                int fishCounter = _smartFishes.Count;
+                while (fishCounter > 0)
+                {
+                    currentFishIndex += leftRightKeyStatus;
+                    
+                    if (currentFishIndex < 0)
+                        currentFishIndex = (_smartFishes.Count - 1);
+                    
+                    if (currentFishIndex > (_smartFishes.Count - 1))
+                        currentFishIndex = 0;
 
+                    if (!_smartFishes[currentFishIndex].IsNotAlive)
+                    {
+                        _smartFishes[currentFishIndex].IsCurrent = true;
+                        break;
+                    }
+
+                    fishCounter--;
+                }
             }
+
             foreach (var sprite in _sprites)
             {
 
@@ -187,9 +187,7 @@ namespace FishGame
 
             }
             _sprites.RemoveAll(sprite => sprite.Position.X < 0);
-            _sprites.RemoveAll(sprite => sprite.gameOver == true);
-
-
+            _sprites.RemoveAll(sprite => sprite.IsNotAlive == true);
 
             base.Update(gameTime);
 
@@ -214,7 +212,10 @@ namespace FishGame
 
             foreach (var sprite in _sprites)
                 sprite.Draw(spriteBatch);
-            visualization.Draw(spriteBatch, currentFish, _smartFishes);
+
+            FishPlayer currentFish = _smartFishes.Where(fish => fish.IsCurrent).FirstOrDefault();
+
+            visualization.Draw(spriteBatch, currentFish.Brain.Levels, _smartFishes.IndexOf(currentFish));
             spriteBatch.End();
 
             base.Draw(gameTime);

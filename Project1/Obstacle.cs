@@ -1,12 +1,8 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace FishGame
 {
@@ -19,7 +15,7 @@ namespace FishGame
             : base(texture)
 
         {
-            this.texture=texture;
+            this.texture = texture;
 
         }
         public override void Update(GameTime gameTime, List<Sprite> sprites)
@@ -36,7 +32,7 @@ namespace FishGame
         override public void Draw(SpriteBatch spriteBatch)
         {
 
-                spriteBatch.Draw(_texture, Position, null, Colour,0f,Vector2.Zero,1f,SpriteEffects.None,0.9f);
+            spriteBatch.Draw(_texture, Position, null, Colour, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.9f);
 
         }
         public static Texture2D CreateTexture(GraphicsDevice device, int width, int height, Func<int, Color> paint)
@@ -46,7 +42,7 @@ namespace FishGame
 
             //the array holds the color for each pixel in the texture
             Color[] data = new Color[width * height];
-            for (int pixel = 0; pixel<data.Count(); pixel++)
+            for (int pixel = 0; pixel < data.Count(); pixel++)
             {
                 //the function applies the color according to the specified pixel
                 data[pixel] = paint(pixel);
@@ -57,11 +53,12 @@ namespace FishGame
 
             return texture;
         }
-        public static List<int> CalculateRandomRectangleParameters() {
+        public static List<int> CalculateRandomRectangleParameters()
+        {
             List<int> parameters = new List<int>();
             Random rnd = new Random();
             int height = rnd.Next(32, 80);
-            int width = rnd.Next(height-20, height);
+            int width = rnd.Next(height - 20, height);
             int speed = rnd.Next(-3, -1);
             int X = 1500;
             int Y = rnd.Next(0, 768);
@@ -71,6 +68,6 @@ namespace FishGame
             parameters.Add(X);
             parameters.Add(Y);
             return parameters;
-            }
+        }
     }
 }

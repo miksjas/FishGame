@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -22,68 +17,48 @@ namespace FishGame
         {
             Move();
 
-
-
-                foreach (var sprite in sprites)
+            foreach (var sprite in sprites)
+            {
+                if (!(sprite is Player) && (!(sprite is Sensor)))
                 {
-                    if (!(sprite is Player) && (!(sprite is Sensor)))
+                    if (sprite.Rectangle.Intersects(this.Rectangle))
                     {
-                        if (sprite.Rectangle.Intersects(this.Rectangle))
-                        {
-                            gameOver= true;
-                        }
-/*                        if (this.IsTouchingBottom(sprite) | this.IsTouchingTop(sprite) | this.IsTouchingLeft(sprite) | this.IsTouchingRight(sprite))
-                        {
-                            Debug.WriteLine("hit");
-                            
-                        }*/
+                        IsNotAlive = true;
                     }
-
                 }
-            
+            }
+
             foreach (var sprite in sprites)
             {
                 if (sprite == this)
-                    //Debug.WriteLine("X:" + this.Position.X + " " + "Y:"+ this.Position.Y);
-
-
-
+                {
                     if (this.Velocity.Y < 0 && (this.Position.Y < 0) ||
-                    (this.Velocity.Y > 0 & (this.Position.Y > 768 - sprite.Rectangle.Height)))
+                        (this.Velocity.Y > 0 & (this.Position.Y > 768 - sprite.Rectangle.Height)))
                         this.Velocity.Y = 0;
 
-                if (this.Velocity.X < 0 && (this.Position.X < 0) ||
-                    (this.Velocity.X > 0 & (this.Position.X > 1024 - sprite.Rectangle.Width)))
-                    this.Velocity.X = 0;
-/*
-                if ((this.Velocity.X > 0 && this.IsTouchingLeft(sprite)) ||
-                    (this.Velocity.X < 0 & this.IsTouchingRight(sprite)))
-
-
-
-                    if ((this.Velocity.Y > 0 && this.IsTouchingTop(sprite)) ||
-                        (this.Velocity.Y < 0 & this.IsTouchingBottom(sprite)))
-                        this.Velocity.Y = 0;*/
-
-
-
+                    if (this.Velocity.X < 0 && (this.Position.X < 0) ||
+                        (this.Velocity.X > 0 & (this.Position.X > 1024 - sprite.Rectangle.Width)))
+                        this.Velocity.X = 0;
+                }
             }
 
             Position += Velocity;
 
             Velocity = Vector2.Zero;
         }
+        
         public override void Draw(SpriteBatch spriteBatch)
-        {   
-            if (!gameOver)
+        {
+            if (!IsNotAlive)
             {
                 spriteBatch.Draw(_texture, Position, Colour);
             }
 
         }
+        
         private void Move()
         {
-            if (!gameOver)
+            if (!IsNotAlive)
             {
                 if (Keyboard.GetState().IsKeyDown(Input.Left))
                     Velocity.X = -speedHorizontal;
