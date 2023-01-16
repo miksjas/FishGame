@@ -55,7 +55,6 @@ namespace FishGame
         protected override void LoadContent()
         {
             Texture2D sensortexture = Obstacle.CreateTexture(GraphicsDevice, 3, 100, pixel => Color.White);
-            Texture2D neuralbackground = Obstacle.CreateTexture(GraphicsDevice, 300, 768, pixel => Color.Black);
             textureDict = new Dictionary<string, Texture2D>();
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
@@ -75,15 +74,12 @@ namespace FishGame
                 Position = new Vector2(300, 668)
             };
 
-            Sprite neuralback = new Sprite(neuralbackground)
-            {
-                Position = new Vector2(0, 0)
-            };
+
 
 
             _sprites = new List<Sprite>
             {
-                neuralback,topborder,bottomborder
+                topborder,bottomborder
             };
 
             for (int i = 0; i<100; i++)

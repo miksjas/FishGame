@@ -18,14 +18,15 @@ namespace FishGame
         private Texture2D singlePixel;
         Texture2D neuralbackground;
         private GraphicsDevice graphics;
-
+        private int margin = 50;
 
         public Visualization(GraphicsDevice graphics)
 
         {
+            this.neuralbackground = Obstacle.CreateTexture(graphics, 300, 768, pixel => Color.Black);
 
             this.graphics = graphics;
-            this.circle = CreateCircle(10);
+            this.circle = CreateCircle(15);
 
 
         }
@@ -38,8 +39,25 @@ namespace FishGame
 
         public  void Draw(SpriteBatch spriteBatch, Network network)
         {
+            spriteBatch.Draw(neuralbackground, new Vector2(0, 0), null, Color.Yellow, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.2f);
 
-            spriteBatch.Draw(CreateCircle(10), new Vector2(30, 30), Color.Red);
+            spriteBatch.Draw(circle, new Vector2(15, 150), null, Color.Yellow*0.8f, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
+            spriteBatch.Draw(circle, new Vector2(45+52, 150), null, Color.Yellow*0.8f, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
+            spriteBatch.Draw(circle, new Vector2(45+105+30, 150), null, Color.Yellow*0.8f, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
+            spriteBatch.Draw(circle, new Vector2(255, 150), null, Color.Yellow*0.8f, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
+
+            spriteBatch.Draw(circle, new Vector2(15, 618), null, Color.Yellow*0.8f, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
+            spriteBatch.Draw(circle, new Vector2(45+52, 618), null, Color.Yellow*0.8f, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
+            spriteBatch.Draw(circle, new Vector2(45+105+30, 618), null, Color.Yellow*0.8f, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
+            spriteBatch.Draw(circle, new Vector2(255, 618), null, Color.Yellow*0.8f, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
+
+            spriteBatch.Draw(circle, new Vector2(15, 384), null, Color.Yellow*0.8f, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
+            spriteBatch.Draw(circle, new Vector2(45+52, 384), null, Color.Yellow*0.8f, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
+            spriteBatch.Draw(circle, new Vector2(45+105+30, 384), null, Color.Yellow*0.8f, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
+            spriteBatch.Draw(circle, new Vector2(255, 384), null, Color.Yellow*0.8f, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
+
+
+
 
         }
         public Texture2D CreateCircle(int radius)
