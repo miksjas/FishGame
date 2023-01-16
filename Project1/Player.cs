@@ -12,7 +12,6 @@ namespace FishGame
 {
     public class Player : Sprite
     {
-        public bool gameOver = false;
         public Player(Texture2D texture)
           : base(texture)
         {
@@ -23,8 +22,8 @@ namespace FishGame
         {
             Move();
 
-            if (!gameOver)
-            {
+
+
                 foreach (var sprite in sprites)
                 {
                     if (!(sprite is Player) && (!(sprite is Sensor)))
@@ -42,7 +41,7 @@ namespace FishGame
                     }
 
                 }
-            }
+            
             foreach (var sprite in sprites)
             {
                 if (sprite == this)

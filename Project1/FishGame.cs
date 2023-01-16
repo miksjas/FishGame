@@ -18,10 +18,11 @@ namespace FishGame
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Texture2D redRectangle;
-
+        private Visualization visualization;
         private List<Sprite> _sprites;
         public Dictionary<string, Texture2D> textureDict;
         public float currentTime;
+        public Network currentNetwork;
         float countDuration = 1.2f;
         int counter = 1;
         public FishGame()
@@ -53,15 +54,26 @@ namespace FishGame
         /// </summary>
         protected override void LoadContent()
         {
-            Texture2D sensortexture = Obstacle.CreateTexture(GraphicsDevice, 3, 250, pixel => Color.White);
+            Texture2D sensortexture = Obstacle.CreateTexture(GraphicsDevice, 3, 100, pixel => Color.White);
             Texture2D neuralbackground = Obstacle.CreateTexture(GraphicsDevice, 300, 768, pixel => Color.Black);
             textureDict = new Dictionary<string, Texture2D>();
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            this.visualization = new Visualization(GraphicsDevice);
 
             var playerTexture = Content.Load<Texture2D>("fish-smallest");
             textureDict.Add(playerTexture.Name, playerTexture);
-
+            Texture2D border = Obstacle.CreateTexture(GraphicsDevice, 1024, 100, pixel => Color.Red);
+            Obstacle topborder = new Obstacle(border)
+            {
+                speedHorizontal = 0,
+                Position = new Vector2(300, 0)
+            };
+            Obstacle bottomborder = new Obstacle(border)
+            {
+                speedHorizontal = 0,
+                Position = new Vector2(300, 668)
+            };
 
             Sprite neuralback = new Sprite(neuralbackground)
             {
@@ -71,23 +83,31 @@ namespace FishGame
 
             _sprites = new List<Sprite>
             {
-                neuralback,
+                neuralback,topborder,bottomborder
             };
 
-            for (int i = 0; i<1; i++)
+            for (int i = 0; i<100; i++)
             {
                 var fish = new SmartPlayer(playerTexture)
                 {
+                    Input = new Input()
+                    {
+                        Left = Keys.A,
+                        Right = Keys.D,
+                        Up = Keys.W,
+                        Down = Keys.S,
+                    },
                     Position = new Vector2(400, 250),
                     speedHorizontal = 5,
                     Colour= Color.Yellow,
                 };
                 _sprites.Add(fish);
-                for (int b = 0; b<5; b++)
-                {
-                    var sens = new Sensor(sensortexture, fish, -70+28*b);
-                    _sprites.Add(sens);
+                currentNetwork = fish.brain;
 
+                for (int b = 0; b<6; b++)
+                {
+                    var sens = new Sensor(sensortexture, fish, -90+36*b);
+                    _sprites.Add(sens);
                 }
             }
         }
@@ -124,7 +144,15 @@ namespace FishGame
         protected override void Update(GameTime gameTime)
         {
             foreach (var sprite in _sprites)
+            {
+
                 sprite.Update(gameTime, _sprites);
+
+            }
+                _sprites.RemoveAll(sprite => sprite.Position.X < 0);
+                _sprites.RemoveAll(sprite => sprite.gameOver == true);
+
+
 
             base.Update(gameTime);
 
@@ -145,10 +173,11 @@ namespace FishGame
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            spriteBatch.Begin();
+            spriteBatch.Begin(SpriteSortMode.BackToFront, null);
+            
             foreach (var sprite in _sprites)
                 sprite.Draw(spriteBatch);
-
+            visualization.Draw(spriteBatch, currentNetwork);
             spriteBatch.End();
 
             base.Draw(gameTime);

@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace FishGame
 {
-    internal class Network
+    public class Network
     {
-        private List<Level> levels = new List<Level> { };
+        public List<Level> levels = new List<Level> { };
         public Network(int[] neuronCounts)
         {
             for(int i = 0; i<neuronCounts.Length-1;i++)
@@ -28,8 +28,9 @@ namespace FishGame
         }
 
     }
-
-    class Level
+/*    https://towardsdatascience.com/building-a-neural-network-framework-in-c-16ef56ce1fef
+    https://rubikscode.net/2022/07/04/implementing-simple-neural-network-in-c/*/
+    public class Level
     {
         public float[] inputs;
         public float[] outputs;

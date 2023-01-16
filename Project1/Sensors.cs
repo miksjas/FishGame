@@ -36,7 +36,10 @@ namespace FishGame
             Move();
             this.Position = PositionVector();
 
-
+            if (smartfish.gameOver == true)
+            {
+                this.gameOver = true;
+            }
             this.isColliding=false;
             this.collidingOffset = 0;
             foreach (var sprite in sprites)
@@ -89,6 +92,9 @@ namespace FishGame
                 * Math.Sin(angle) + ((PositionVector().Y+texture.Height) - PositionVector().Y) * Math.Cos(angle))), sprite.Rectangle);
             float distance = ((startingPoint.X-intersection.X)*(startingPoint.X-intersection.X)+(startingPoint.Y-intersection.Y)*(startingPoint.Y-intersection.Y));
             offset = (float)(Math.Sqrt(distance) / texture.Height);
+            offset = (float)(offset * 0.5);
+            var noffset = 1-offset;
+            Debug.WriteLine(noffset);
             return 1-offset;
         }
 
@@ -97,17 +103,14 @@ namespace FishGame
             //spriteBatch.Draw(texture, new Vector2(smartfish.Position.X + smartfish.RectangleWidth / 2 ,smartfish.Position.Y + smartfish.RectangleHeight /2 ), this.Rectangle,Color.Yellow, 1.57079633f, new Vector2(texture.Width/2,texture.Height/2),1, SpriteEffects.None,0f);
             //spriteBatch.Draw(texture, new Vector2(300+32+50+,100+25/2), this.Rectangle, Color.Yellow, 1.57079633f, new Vector2(texture.Width/2, texture.Height/2), 1, SpriteEffects.None, 0f);
             //300=smartfish.Position.X     32/2 = smartfish.rectnaglewidth/2  50 = texture.Width/2 16 = smartfish.rectanglewidth/2
-            if (!smartfish.gameOver)
-            {
                 DrawRay(spriteBatch);
-            }
 
         }
 
         private void DrawRay(SpriteBatch spriteBatch)
         {
 
-            spriteBatch.Draw(texture, PositionVector(), null, GetColor(), -rayAngle, new Vector2(0, 0), 1, SpriteEffects.None, 0f);
+            spriteBatch.Draw(texture, PositionVector(), null, GetColor(), -rayAngle, new Vector2(0, 0), 1, SpriteEffects.None, 1f);
 
         }
 

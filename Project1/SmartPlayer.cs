@@ -16,7 +16,7 @@ namespace FishGame
 
         public List<Sensor> Sensors = new List<Sensor> { };
         private Texture2D sensorTexture;
-        private Network brain;
+        public Network brain;
         private float[] offsets;
         private float[] outputs;
         public SmartPlayer(Texture2D texture) : base(texture)
@@ -39,10 +39,10 @@ namespace FishGame
             }
             foreach (var item in offsets)
             {
-                Debug.WriteLine(("[{0}]", string.Join(", ", offsets)));
+                //Debug.WriteLine(("[{0}]", string.Join(", ", offsets)));
             }
             this.outputs = Network.FeedForward(offsets, this.brain);
-            //Debug.WriteLine(this.brain);
+            Debug.WriteLine(this.brain);
             Move();
             if (!gameOver)
             {
@@ -64,12 +64,12 @@ namespace FishGame
 
 
 
-                    if (this.Velocity.Y < 0 && (this.Position.Y < +200) ||
-                    (this.Velocity.Y > 0 & (this.Position.Y > 768-200 - sprite.Rectangle.Height)))
+                    if (this.Velocity.Y < 0 && (this.Position.Y < 0) ||
+                    (this.Velocity.Y > 0 & (this.Position.Y > 768 - sprite.Rectangle.Height)))
                         this.Velocity.Y = 0;
 
                 if (this.Velocity.X < 0 && (this.Position.X < 301) ||
-                    (this.Velocity.X > 0 & (this.Position.X > 1024+350 - sprite.Rectangle.Width)))
+                    (this.Velocity.X > 0 & (this.Position.X > 1024 + 1200 - sprite.Rectangle.Width)))
                     this.Velocity.X = 0;
             }
 
@@ -80,7 +80,7 @@ namespace FishGame
         private void Move()
         {
             {
-/*                if (this.outputs[0] == 1)
+                if (this.outputs[0] == 1)
                 {
                     Velocity.X = -speedHorizontal;
                 }
@@ -97,11 +97,11 @@ namespace FishGame
                 if (this.outputs[3] == 1)
                 {
                     Velocity.Y = speedHorizontal;
-                }*/
+                }
 
 
 
-                if (Keyboard.GetState().IsKeyDown(Input.Left))
+/*                if (Keyboard.GetState().IsKeyDown(Input.Left))
                     Velocity.X = -speedHorizontal;
                 else if (Keyboard.GetState().IsKeyDown(Input.Right))
                     Velocity.X = speedHorizontal;
@@ -110,7 +110,7 @@ namespace FishGame
                     Velocity.Y = -speedHorizontal;
                 else if (Keyboard.GetState().IsKeyDown(Input.Down))
                     Velocity.Y = speedHorizontal;
-
+*/
             }
 
         }

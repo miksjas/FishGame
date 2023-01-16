@@ -12,6 +12,7 @@ namespace FishGame
     public class Sprite
     {
         protected Texture2D _texture;
+        public bool gameOver = false;
 
         public Vector2 Position;
         public Vector2 Velocity;
