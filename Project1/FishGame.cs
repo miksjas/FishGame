@@ -148,12 +148,11 @@ namespace FishGame
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            _smartFishes.RemoveAll(smartplayer => smartplayer.gameOver == true);
 
 
             if (Keyboard.GetState().IsKeyDown(Keys.Right))
             {
-                if (_smartFishes[index+1] is not null)
+                if (_smartFishes.Count() > index+1)
                 {
                     currentNetwork = _smartFishes[index+1].brain;
                     _smartFishes[index].isCurrent = false;
@@ -163,7 +162,7 @@ namespace FishGame
             }
             else if (Keyboard.GetState().IsKeyDown(Keys.Left))
             {
-                if (_smartFishes[index-1] is not null)
+                if (index - 1 > 0)
                 {
                     currentNetwork = _smartFishes[index-1].brain;
                     _smartFishes[index].isCurrent = false;
