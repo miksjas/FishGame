@@ -152,7 +152,7 @@ namespace FishGame
             {
                 currentNetwork = _smartFishes[index+1].brain;
                 _smartFishes[index].isCurrent = false;
-                _smartFishes[index=1].isCurrent = true;
+                _smartFishes[index+1].isCurrent = true;
             }
                 else if (Keyboard.GetState().IsKeyDown(Keys.Left))
             {
