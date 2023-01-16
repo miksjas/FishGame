@@ -103,7 +103,11 @@ namespace FishGame
             //spriteBatch.Draw(texture, new Vector2(smartfish.Position.X + smartfish.RectangleWidth / 2 ,smartfish.Position.Y + smartfish.RectangleHeight /2 ), this.Rectangle,Color.Yellow, 1.57079633f, new Vector2(texture.Width/2,texture.Height/2),1, SpriteEffects.None,0f);
             //spriteBatch.Draw(texture, new Vector2(300+32+50+,100+25/2), this.Rectangle, Color.Yellow, 1.57079633f, new Vector2(texture.Width/2, texture.Height/2), 1, SpriteEffects.None, 0f);
             //300=smartfish.Position.X     32/2 = smartfish.rectnaglewidth/2  50 = texture.Width/2 16 = smartfish.rectanglewidth/2
+            if (this.smartfish.isCurrent)
+            {
                 DrawRay(spriteBatch);
+
+            }
 
         }
 

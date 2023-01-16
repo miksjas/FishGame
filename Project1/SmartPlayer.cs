@@ -17,6 +17,8 @@ namespace FishGame
         public List<Sensor> Sensors = new List<Sensor> { };
         private Texture2D sensorTexture;
         public Network brain;
+        public bool isCurrent = false;
+
         private float[] offsets;
         private float[] outputs;
         public SmartPlayer(Texture2D texture) : base(texture)

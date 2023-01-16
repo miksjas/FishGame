@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.Metrics;
 using System.Linq;
+using System.Reflection;
 
 namespace FishGame
 {
@@ -20,6 +21,9 @@ namespace FishGame
         Texture2D redRectangle;
         private Visualization visualization;
         private List<Sprite> _sprites;
+        private List<SmartPlayer> _smartFishes;
+        private int index = 0;
+
         public Dictionary<string, Texture2D> textureDict;
         public float currentTime;
         public Network currentNetwork;
@@ -81,6 +85,10 @@ namespace FishGame
             {
                 topborder,bottomborder
             };
+            _smartFishes = new List<SmartPlayer>
+            {
+              
+            };
 
             for (int i = 0; i<100; i++)
             {
@@ -98,6 +106,7 @@ namespace FishGame
                     Colour= Color.Yellow,
                 };
                 _sprites.Add(fish);
+                _smartFishes.Add(fish);
                 currentNetwork = fish.brain;
 
                 for (int b = 0; b<6; b++)
@@ -139,6 +148,20 @@ namespace FishGame
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+                    if (Keyboard.GetState().IsKeyDown(Keys.Right))
+            {
+                currentNetwork = _smartFishes[index+1].brain;
+                _smartFishes[index].isCurrent = false;
+                _smartFishes[index=1].isCurrent = true;
+            }
+                else if (Keyboard.GetState().IsKeyDown(Keys.Left))
+            {
+                currentNetwork = _smartFishes[index-1].brain;
+                _smartFishes[index].isCurrent = false;
+                _smartFishes[index-1].isCurrent = true;
+
+            }
+
             foreach (var sprite in _sprites)
             {
 
@@ -147,6 +170,7 @@ namespace FishGame
             }
                 _sprites.RemoveAll(sprite => sprite.Position.X < 0);
                 _sprites.RemoveAll(sprite => sprite.gameOver == true);
+            _smartFishes.RemoveAll(smartplayer => smartplayer.gameOver == true);
 
 
 

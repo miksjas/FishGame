@@ -14,7 +14,9 @@ namespace FishGame
     public class Visualization
     {
         private List<Level> levels;
-        private Texture2D circle;
+        private Texture2D circleOutline;
+        private Texture2D circleFilled;
+
         private Texture2D singlePixel;
         Texture2D neuralbackground;
         private GraphicsDevice graphics;
@@ -30,8 +32,8 @@ namespace FishGame
             this.neuralbackground = Obstacle.CreateTexture(graphics, 300, 768, pixel => Color.Black);
             this.singlePixel = Obstacle.CreateTexture(graphics,1,1, pixel => Color.White);
             this.graphics = graphics;
-            this.circle = CreateCircle(15);
-
+            this.circleOutline = CreateCircleOutline(15);
+            this.circleFilled= CreateCircleFilled(14);
 
 
         }
@@ -44,7 +46,7 @@ namespace FishGame
         public void Draw(SpriteBatch spriteBatch, Network network)
         {
             this.levels = network.levels;
-            spriteBatch.Draw(neuralbackground, new Vector2(0, 0), null, Color.Yellow, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.2f);
+            spriteBatch.Draw(neuralbackground, new Vector2(0, 0), null, Color.Yellow, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.4f);
             drawNetwork(spriteBatch, levels);
 
 
@@ -74,25 +76,34 @@ namespace FishGame
             {
                 float by = (float)i/(float)(levels[0].inputs.Length-1);
                 float x = Lerp(margin, right, by );
-                spriteBatch.Draw(circle, new Vector2(x, bottom), null, Color.Yellow*0.8f, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
+                spriteBatch.Draw(circleOutline, new Vector2(x, bottom), null, Color.Yellow*0.8f, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
+                spriteBatch.Draw(circleFilled, new Vector2(x+1, bottom+1), null, Color.Black, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
+                spriteBatch.Draw(circleFilled, new Vector2(x+1, bottom+1), null, Color.Red*(float)levels[0].inputs[i], 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+
+
 
             }
             for (int i = 0; i<levels[0].outputs.Length; i++)
             {
                 float by = (float)i/(float)(levels[0].outputs.Length-1);
                 float x = Lerp(margin, right, by);
-                spriteBatch.Draw(circle, new Vector2(x, middle), null, Color.Yellow*0.8f, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
+                spriteBatch.Draw(circleOutline, new Vector2(x, middle), null, Color.Yellow*0.8f, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
+                spriteBatch.Draw(circleFilled, new Vector2(x+1, middle+1), null, Color.Black, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
+                spriteBatch.Draw(circleFilled, new Vector2(x+1, middle+1), null, Color.Red*(float)levels[0].outputs[i], 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+
+
 
             }
-             for (int i = 0; i < levels[0].inputs.Length;i++)
+            for (int i = 0; i < levels[0].inputs.Length; i++)
             {
-                for (int j=0; j<levels[0].outputs.Length;j++)
+                for (int j = 0; j<levels[0].outputs.Length; j++)
                 {
                     float by1 = (float)i/(float)(levels[0].inputs.Length-1);
                     float x1 = Lerp(margin, right, by1);
                     float by2 = (float)j/(float)(levels[0].outputs.Length-1);
                     float x2 = Lerp(margin, right, by2);
-                    DrawLine(spriteBatch, new Vector2(x1, bottom), new Vector2(x2, middle), Color.White);
+                    DrawLine(spriteBatch, new Vector2(x1+15, bottom+15), new Vector2(x2 + 15, middle + 15), Color.White*levels[0].weights[i][j]);
+
 
                 }
             }
@@ -101,20 +112,36 @@ namespace FishGame
             {
                 float by = (float)i/(float)(levels[1].outputs.Length-1);
                 float x = Lerp(margin, right, by);
-                spriteBatch.Draw(circle, new Vector2(x, top), null, Color.Yellow*0.8f, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
+                spriteBatch.Draw(circleOutline, new Vector2(x, top), null, Color.Yellow*0.8f, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
+                spriteBatch.Draw(circleFilled, new Vector2(x+1, top+1), null, Color.Black, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
+                spriteBatch.Draw(circleFilled, new Vector2(x+1, top+1), null, Color.Red*(float)levels[0].outputs[i], 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
 
+
+
+            }
+            for (int i = 0; i < levels[1].inputs.Length; i++)
+            {
+                for (int j = 0; j<levels[1].outputs.Length; j++)
+                {
+                    float by1 = (float)i/(float)(levels[1].inputs.Length-1);
+                    float x1 = Lerp(margin, right, by1);
+                    float by2 = (float)j/(float)(levels[1].outputs.Length-1);
+                    float x2 = Lerp(margin, right, by2);
+                    DrawLine(spriteBatch, new Vector2(x1+15, middle+15), new Vector2(x2 + 15, top + 15), Color.White*levels[1].weights[i][j]);
+
+                }
             }
         }
 
-        public void DrawLine(this SpriteBatch spriteBatch, Vector2 begin, Vector2 end, Color color, int width = 1)
+        public void DrawLine(SpriteBatch spriteBatch, Vector2 begin, Vector2 end, Color color, int width = 1)
         {
             Rectangle r = new Rectangle((int)begin.X, (int)begin.Y, (int)(end - begin).Length()+width, width);
             Vector2 v = Vector2.Normalize(begin - end);
             float angle = (float)Math.Acos(Vector2.Dot(v, -Vector2.UnitX));
             if (begin.Y > end.Y) angle = MathHelper.TwoPi - angle;
-            spriteBatch.Draw(singlePixel, r, null, color, angle, Vector2.Zero, SpriteEffects.None, 0);
+            spriteBatch.Draw(singlePixel, r, null, color, angle, Vector2.Zero, SpriteEffects.None, 0.3f);
         }
-        public Texture2D CreateCircle(int radius)
+        public Texture2D CreateCircleOutline(int radius)
         {
             int outerRadius = radius*2 + 2; // So circle doesn't go out of bounds
             Texture2D texture = new Texture2D(graphics, outerRadius, outerRadius);
@@ -137,6 +164,99 @@ namespace FishGame
                 data[y * outerRadius + x + 1] = Color.White;
             }
 
+            texture.SetData(data);
+            return texture;
+        }
+        public Texture2D CreateCircleFilled(int radius)
+        {
+            int outerRadius = radius*2 + 2; // So circle doesn't go out of bounds
+            Texture2D texture = new Texture2D(graphics, outerRadius, outerRadius);
+
+            Color[] data = new Color[outerRadius * outerRadius];
+
+            // Colour the entire texture transparent first.
+            for (int i = 0; i < data.Length; i++)
+                data[i] = Color.Transparent;
+
+            // Work out the minimum step necessary using trigonometry + sine approximation.
+            double angleStep = 1f/radius;
+
+            for (double angle = 0; angle < Math.PI*2; angle += angleStep)
+            {
+                // Use the parametric definition of a circle: http://en.wikipedia.org/wiki/Circle#Cartesian_coordinates
+                int x = (int)Math.Round(radius + radius * Math.Cos(angle));
+                int y = (int)Math.Round(radius + radius * Math.Sin(angle));
+
+                data[y * outerRadius + x + 1] = Color.White;
+            }
+
+            texture.SetData(data);
+            bool finished = false;
+            int firstSkip = 0;
+            int lastSkip = 0;
+            for (int i = 0; i <= data.Length - 1; i++)
+            {
+                if (finished == false)
+                {
+                    //T = transparent W = White;
+                    //Find the First Batch of Colors TTTTWWWTTTT The top of the circle
+                    if ((data[i] == Color.White) && (firstSkip == 0))
+                    {
+                        while (data[i + 1] == Color.White)
+                        {
+                            i++;
+                        }
+                        firstSkip = 1;
+                        i++;
+                    }
+                    //Now Start Filling                       TTTTTTTTWWTTTTTTTT
+                    //circle in Between                       TTTTTTW--->WTTTTTT
+                    //transaparent blancks                    TTTTTWW--->WWTTTTT
+                    //                                        TTTTTTW--->WTTTTTT
+                    //                                        TTTTTTTTWWTTTTTTTT
+                    if (firstSkip == 1)
+                    {
+                        if (data[i] == Color.White && data[i + 1] != Color.White)
+                        {
+                            i++;
+                            while (data[i] != Color.White)
+                            {
+                                //Loop to check if its the last row of pixels
+                                //We need to check this because of the 
+                                //int outerRadius = radius * 2 + -->'2'<--;
+                                for (int j = 1; j <= outerRadius; j++)
+                                {
+                                    if (data[i + j] != Color.White)
+                                    {
+                                        lastSkip++;
+                                    }
+                                }
+                                //If its the last line of pixels, end drawing
+                                if (lastSkip == outerRadius)
+                                {
+                                    break;
+                                    finished = true;
+                                }
+                                else
+                                {
+                                    data[i] = Color.White;
+                                    i++;
+                                    lastSkip = 0;
+                                }
+                            }
+                            while (data[i] == Color.White)
+                            {
+                                i++;
+                            }
+                            i--;
+                        }
+
+
+                    }
+                }
+            }
+            // Set the data when finished 
+            //-- don't need to paste this part, already given up above
             texture.SetData(data);
             return texture;
         }
