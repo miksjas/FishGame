@@ -87,10 +87,10 @@ namespace FishGame
             };
             _smartFishes = new List<SmartPlayer>
             {
-              
+
             };
 
-            for (int i = 0; i<100; i++)
+            for (int i = 0; i<10; i++)
             {
                 var fish = new SmartPlayer(playerTexture)
                 {
@@ -148,17 +148,30 @@ namespace FishGame
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-                    if (Keyboard.GetState().IsKeyDown(Keys.Right))
+            _smartFishes.RemoveAll(smartplayer => smartplayer.gameOver == true);
+
+
+            if (Keyboard.GetState().IsKeyDown(Keys.Right))
             {
-                currentNetwork = _smartFishes[index+1].brain;
-                _smartFishes[index].isCurrent = false;
-                _smartFishes[index+1].isCurrent = true;
+                if (_smartFishes[index+1] is not null)
+                {
+                    currentNetwork = _smartFishes[index+1].brain;
+                    _smartFishes[index].isCurrent = false;
+                    _smartFishes[index+1].isCurrent = true;
+                    index = index+1;
+                    }
             }
-                else if (Keyboard.GetState().IsKeyDown(Keys.Left))
+            else if (Keyboard.GetState().IsKeyDown(Keys.Left))
             {
-                currentNetwork = _smartFishes[index-1].brain;
-                _smartFishes[index].isCurrent = false;
-                _smartFishes[index-1].isCurrent = true;
+                if (_smartFishes[index-1] is not null)
+                {
+                    currentNetwork = _smartFishes[index-1].brain;
+                    _smartFishes[index].isCurrent = false;
+                    _smartFishes[index-1].isCurrent = true;
+                    index = index-1;
+
+                }
+
 
             }
 
@@ -168,9 +181,8 @@ namespace FishGame
                 sprite.Update(gameTime, _sprites);
 
             }
-                _sprites.RemoveAll(sprite => sprite.Position.X < 0);
-                _sprites.RemoveAll(sprite => sprite.gameOver == true);
-            _smartFishes.RemoveAll(smartplayer => smartplayer.gameOver == true);
+            _sprites.RemoveAll(sprite => sprite.Position.X < 0);
+            _sprites.RemoveAll(sprite => sprite.gameOver == true);
 
 
 
@@ -194,7 +206,7 @@ namespace FishGame
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             spriteBatch.Begin(SpriteSortMode.BackToFront, null);
-            
+
             foreach (var sprite in _sprites)
                 sprite.Draw(spriteBatch);
             visualization.Draw(spriteBatch, currentNetwork);

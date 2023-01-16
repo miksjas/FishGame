@@ -30,7 +30,6 @@ namespace FishGame
                     {
                         if (sprite.Rectangle.Intersects(this.Rectangle))
                         {
-                            Debug.WriteLine("jeff");
                             gameOver= true;
                         }
 /*                        if (this.IsTouchingBottom(sprite) | this.IsTouchingTop(sprite) | this.IsTouchingLeft(sprite) | this.IsTouchingRight(sprite))

@@ -44,7 +44,6 @@ namespace FishGame
                 //Debug.WriteLine(("[{0}]", string.Join(", ", offsets)));
             }
             this.outputs = Network.FeedForward(offsets, this.brain);
-            Debug.WriteLine(this.brain);
             Move();
             if (!gameOver)
             {

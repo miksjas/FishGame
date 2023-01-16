@@ -50,7 +50,6 @@ namespace FishGame
                     {
                         this.collidingOffset = GetIntersectionOffset(sprite, rayAngle);
                         this.isColliding= true;
-                        Debug.WriteLine(collidingOffset);
                     }
 
                 }
@@ -94,7 +93,6 @@ namespace FishGame
             offset = (float)(Math.Sqrt(distance) / texture.Height);
             offset = (float)(offset * 0.5);
             var noffset = 1-offset;
-            Debug.WriteLine(noffset);
             return 1-offset;
         }
 
