@@ -31,6 +31,7 @@ namespace FishGame
 
         private void button2_Click(object sender, EventArgs e)
         {
+            RunMode = RunMode.Simulation;
             DialogResult = DialogResult.OK;
         }
     }

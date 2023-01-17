@@ -27,6 +27,7 @@ namespace FishGame
         private float currentTime;
         private float countDuration = 1.2f;
         private int counter = 1;
+        private Player player;
 
         public FishGame()
         {
@@ -55,7 +56,7 @@ namespace FishGame
         /// </summary>
         protected override void LoadContent()
         {
-            Texture2D sensortexture = Obstacle.CreateTexture(GraphicsDevice, 3, 100, pixel => Color.White);
+            Texture2D sensortexture = UtilityHelpers.CreateTexture(GraphicsDevice, 3, 100, pixel => Color.White);
             textureDict = new Dictionary<string, Texture2D>();
 
             spriteBatch = new SpriteBatch(GraphicsDevice);
@@ -71,7 +72,7 @@ namespace FishGame
             textureDict.Add(playerTexture.Name, playerTexture);
 
 
-            Texture2D border = Obstacle.CreateTexture(GraphicsDevice, 1024, 100, pixel => Color.Red);
+            Texture2D border = UtilityHelpers.CreateTexture(GraphicsDevice, 1024, 100, pixel => Color.Red);
             Obstacle topborder = new Obstacle(border)
             {
                 speedHorizontal = 0,
@@ -93,6 +94,13 @@ namespace FishGame
 
             if (RunMode == RunMode.Solo)
             {
+                var leftbordertexture = UtilityHelpers.CreateTexture(GraphicsDevice, 300, 768, pixel => Color.Black);
+                Obstacle leftborder = new Obstacle(leftbordertexture)
+                {
+                    speedHorizontal = 0,
+                    Position = new Vector2(0, 0)
+                };
+                _sprites.Add(leftborder);
                 var fish = new Player(playerTexture)
                 {
                     Input = new Input()
@@ -102,9 +110,11 @@ namespace FishGame
                         Up = Keys.W,
                         Down = Keys.S,
                     },
-                    Position = new Vector2(100, 100),
+                    Position = new Vector2(400, 250),
                     speedHorizontal = 5,
                 };
+                player = fish;
+
                 _sprites.Add(fish);
             }
             else
@@ -129,7 +139,7 @@ namespace FishGame
 
                     for (int sensor = 0; sensor < fish.SensorsAmount; sensor++)
                     {
-                        var sens = new Sensor(sensortexture, fish, Visualization.Lerp(90, -90, (float)sensor / (float)(fish.SensorsAmount - 1)));
+                        var sens = new Sensor(sensortexture, fish, UtilityHelpers.Lerp(90, -90, (float)sensor / (float)(fish.SensorsAmount - 1)));
                         _sprites.Add(sens);
                     }
                 }
@@ -140,7 +150,7 @@ namespace FishGame
         public void CreateObstacle()
         {
             List<int> dimensions = Obstacle.CalculateRandomRectangleParameters();
-            Texture2D texture2D = Obstacle.CreateTexture(GraphicsDevice, dimensions[0], dimensions[1], pixel => Color.Red);
+            Texture2D texture2D = UtilityHelpers.CreateTexture(GraphicsDevice, dimensions[0], dimensions[1], pixel => Color.Red);
             redRectangle = texture2D;
             _sprites.Add(
                 new Obstacle(redRectangle)
@@ -171,54 +181,63 @@ namespace FishGame
 
         protected override void Update(GameTime gameTime)
         {
+            if (RunMode == RunMode.Solo)
+            {
+                if(player.IsNotAlive)
+                {
+                    gameOver();
+                }
+            }
             //skip fish if dead
-            int leftRightKeyStatus = 0;
-            KeyboardState lastkbState = kbState;
-            kbState = Keyboard.GetState();
-            if (kbState.IsKeyDown(Keys.Left) && !lastkbState.IsKeyDown(Keys.Left))
+            if (RunMode == RunMode.Simulation)
             {
-                leftRightKeyStatus = -1;
-            }
-            if (kbState.IsKeyDown(Keys.Right) && !lastkbState.IsKeyDown(Keys.Right))
-            {
-                leftRightKeyStatus = 1;
-            }
-
-            if (leftRightKeyStatus != 0)
-            {
-                int currentFishIndex = 0;
-                for (int i = 0; i < _smartFishes.Count; i++)
+                int leftRightKeyStatus = 0;
+                KeyboardState lastkbState = kbState;
+                kbState = Keyboard.GetState();
+                if (kbState.IsKeyDown(Keys.Left) && !lastkbState.IsKeyDown(Keys.Left))
                 {
-                    if (_smartFishes[i].IsCurrent)
-                    {
-                        currentFishIndex = i;
-                        break;
-                    }
+                    leftRightKeyStatus = -1;
+                }
+                if (kbState.IsKeyDown(Keys.Right) && !lastkbState.IsKeyDown(Keys.Right))
+                {
+                    leftRightKeyStatus = 1;
                 }
 
-                _smartFishes[currentFishIndex].IsCurrent = false;
-
-                int fishCounter = _smartFishes.Count;
-                while (fishCounter > 0)
+                if (leftRightKeyStatus != 0)
                 {
-                    currentFishIndex += leftRightKeyStatus;
-
-                    if (currentFishIndex < 0)
-                        currentFishIndex = (_smartFishes.Count - 1);
-
-                    if (currentFishIndex > (_smartFishes.Count - 1))
-                        currentFishIndex = 0;
-
-                    if (!_smartFishes[currentFishIndex].IsNotAlive)
+                    int currentFishIndex = 0;
+                    for (int i = 0; i < _smartFishes.Count; i++)
                     {
-                        _smartFishes[currentFishIndex].IsCurrent = true;
-                        break;
+                        if (_smartFishes[i].IsCurrent)
+                        {
+                            currentFishIndex = i;
+                            break;
+                        }
                     }
 
-                    fishCounter--;
+                    _smartFishes[currentFishIndex].IsCurrent = false;
+
+                    int fishCounter = _smartFishes.Count;
+                    while (fishCounter > 0)
+                    {
+                        currentFishIndex += leftRightKeyStatus;
+
+                        if (currentFishIndex < 0)
+                            currentFishIndex = (_smartFishes.Count - 1);
+
+                        if (currentFishIndex > (_smartFishes.Count - 1))
+                            currentFishIndex = 0;
+
+                        if (!_smartFishes[currentFishIndex].IsNotAlive)
+                        {
+                            _smartFishes[currentFishIndex].IsCurrent = true;
+                            break;
+                        }
+
+                        fishCounter--;
+                    }
                 }
             }
-
             foreach (var sprite in _sprites)
             {
 
@@ -228,7 +247,7 @@ namespace FishGame
             _sprites.RemoveAll(sprite => sprite.Position.X < 0);
             _sprites.RemoveAll(sprite => sprite.IsNotAlive == true);
             bool contains = _smartFishes.Any(p => p.IsNotAlive == false);
-            if (!contains)
+            if (!contains && _smartFishes.Any())
             {
                 gameOver();
             }
@@ -256,7 +275,7 @@ namespace FishGame
 
             FishPlayer currentFish = _smartFishes.Where(fish => fish.IsCurrent).FirstOrDefault();
 
-            visualization.Draw(spriteBatch, currentFish.Brain.Levels, _smartFishes.IndexOf(currentFish));
+            if (currentFish != null) visualization.Draw(spriteBatch, currentFish.Brain.Levels, _smartFishes.IndexOf(currentFish));
             spriteBatch.DrawString(defaultFont, "Score: " + (int)elapsedTime, new Vector2(5, 10), Color.White, 0f, Vector2.Zero, 1.2f, SpriteEffects.None, 0.1f);
 
             spriteBatch.End();

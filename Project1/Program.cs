@@ -1,16 +1,20 @@
-﻿
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 using FishGame;
 
-using var game = new FishGame.FishGame();
-
 var menuForm = new MenuForm();
-
-if (menuForm.ShowDialog() == DialogResult.OK)
+var keepOpen = true;
+while (keepOpen)
 {
-    game.FishAmount = menuForm.FishAmount;
-    game.HiddenNeuronAmount = menuForm.HiddenNeuronAmount;
-    game.SensorsAmount = menuForm.SensorsAmount;
-    game.RunMode = menuForm.RunMode;
-    game.Run();
+    using var game = new FishGame.FishGame();
+    var result = menuForm.ShowDialog();
+    if (result == DialogResult.OK)
+    {
+        game.FishAmount = menuForm.FishAmount;
+        game.HiddenNeuronAmount = menuForm.HiddenNeuronAmount;
+        game.SensorsAmount = menuForm.SensorsAmount;
+        game.RunMode = menuForm.RunMode;
+        game.Run();
+    }
+    if (result == DialogResult.Cancel)
+        keepOpen = false;
 }

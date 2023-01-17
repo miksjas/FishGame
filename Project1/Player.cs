@@ -36,8 +36,8 @@ namespace FishGame
                         (Velocity.Y > 0 & (Position.Y > 768 - sprite.Rectangle.Height)))
                         Velocity.Y = 0;
 
-                    if (Velocity.X < 0 && (Position.X < 0) ||
-                        (Velocity.X > 0 & (Position.X > 1024 - sprite.Rectangle.Width)))
+                    if (Velocity.X < 0 && (Position.X < 301) ||
+                        (Velocity.X > 0 & (Position.X > 1024 + 300 - sprite.Rectangle.Width)))
                         Velocity.X = 0;
                 }
             }

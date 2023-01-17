@@ -107,9 +107,9 @@ namespace FishGame
             this.label1.Location = new System.Drawing.Point(117, 422);
             this.label1.Margin = new System.Windows.Forms.Padding(7, 0, 7, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(181, 41);
+            this.label1.Size = new System.Drawing.Size(185, 41);
             this.label1.TabIndex = 5;
-            this.label1.Text = "Fish amount";
+            this.label1.Text = "Fish Amount";
             // 
             // label2
             // 
@@ -173,15 +173,17 @@ namespace FishGame
             this.Controls.Add(this.enterSensorAmount);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.playSoloButton);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(7);
             this.MaximizeBox = false;
             this.Name = "MenuForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "FishGame Menu";
+            this.Text = "Fish Game Menu";
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
+
         }
 
         #endregion

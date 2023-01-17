@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -9,7 +8,6 @@ namespace FishGame
     class Obstacle : Sprite
     {
         private readonly Texture2D texture;
-
 
         public Obstacle(Texture2D texture)
             : base(texture)
@@ -29,30 +27,14 @@ namespace FishGame
             Velocity.X = speedHorizontal;
 
         }
+
         override public void Draw(SpriteBatch spriteBatch)
         {
 
             spriteBatch.Draw(_texture, Position, null, Colour, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.9f);
 
         }
-        public static Texture2D CreateTexture(GraphicsDevice device, int width, int height, Func<int, Color> paint)
-        {
-            //initialize a texture
-            Texture2D texture = new Texture2D(device, width, height);
 
-            //the array holds the color for each pixel in the texture
-            Color[] data = new Color[width * height];
-            for (int pixel = 0; pixel < data.Count(); pixel++)
-            {
-                //the function applies the color according to the specified pixel
-                data[pixel] = paint(pixel);
-            }
-
-            //set the color
-            texture.SetData(data);
-
-            return texture;
-        }
         public static List<int> CalculateRandomRectangleParameters()
         {
             List<int> parameters = new List<int>();

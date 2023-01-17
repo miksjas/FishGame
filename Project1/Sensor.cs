@@ -7,35 +7,33 @@ namespace FishGame
 {
     public class Sensor : Sprite
     {
-        private readonly Texture2D texture;
-        private FishPlayer smartfish;
-        public Vector2 IntersectionPoint;
-        public bool isColliding;
         public float collidingOffset;
-        public float rayAngle;
-        public Rectangle rotatedRectangle;
+
+        private float rayAngle;
+        private bool isColliding;
+        private readonly Texture2D texture;
+        private readonly FishPlayer smartfish;
 
         public Sensor(Texture2D texture, FishPlayer smartfish, float angle) : base(texture)
         {
             this.texture = texture;
             this.smartfish = smartfish;
-            rayAngle = (float)ConvertToRadians(angle + 90);
+            rayAngle = (float)UtilityHelpers.ConvertToRadians(angle + 90);
             smartfish.Sensors.Add(this);
         }
 
-
-
         public override void Update(GameTime gameTime, List<Sprite> sprites)
         {
-            Move();
             Position = PositionVector();
 
             if (smartfish.IsNotAlive == true)
             {
                 IsNotAlive = true;
             }
+
             isColliding = false;
             collidingOffset = 0;
+
             foreach (var sprite in sprites)
             {
                 if (sprite is not Player && (sprite is not Sensor))
@@ -47,10 +45,7 @@ namespace FishGame
                     }
 
                 }
-
             }
-
-
         }
 
         private bool CheckIfLineIntersects(Sprite sprite, float angle)
@@ -76,9 +71,9 @@ namespace FishGame
 
         private float GetIntersectionOffset(Sprite sprite, float angle)
         {
-            Vector2 startingPoint = Vector2.Zero;
-            Vector2 intersection = Vector2.Zero;
-            float offset = 0;
+            Vector2 startingPoint;
+            Vector2 intersection;
+            float offset;
             startingPoint = PositionVector();
             intersection = GetIntersection(PositionVector(), new Vector2((float)(PositionVector().X + ((PositionVector().X) - PositionVector().X) * Math.Cos(angle)
                 + ((PositionVector().Y + texture.Height) - PositionVector().Y) * Math.Sin(angle)), (float)(PositionVector().Y - ((PositionVector().X) - PositionVector().X)
@@ -86,15 +81,11 @@ namespace FishGame
             float distance = ((startingPoint.X - intersection.X) * (startingPoint.X - intersection.X) + (startingPoint.Y - intersection.Y) * (startingPoint.Y - intersection.Y));
             offset = (float)(Math.Sqrt(distance) / texture.Height);
             decimal decimaloffset = Math.Round((decimal)offset, 3);
-            var noffset = 1 - decimaloffset;
             return 1 - (float)decimaloffset;
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            //spriteBatch.Draw(texture, new Vector2(smartfish.Position.X + smartfish.RectangleWidth / 2 ,smartfish.Position.Y + smartfish.RectangleHeight /2 ), this.Rectangle,Color.Yellow, 1.57079633f, new Vector2(texture.Width/2,texture.Height/2),1, SpriteEffects.None,0f);
-            //spriteBatch.Draw(texture, new Vector2(300+32+50+,100+25/2), this.Rectangle, Color.Yellow, 1.57079633f, new Vector2(texture.Width/2, texture.Height/2), 1, SpriteEffects.None, 0f);
-            //300=smartfish.Position.X     32/2 = smartfish.rectnaglewidth/2  50 = texture.Width/2 16 = smartfish.rectanglewidth/2
             if (smartfish.IsCurrent)
             {
                 DrawRay(spriteBatch);
@@ -116,34 +107,22 @@ namespace FishGame
             {
                 return Color.Black;
             }
+        }
 
-        }
-        //utility
-        public static double ConvertToRadians(double angle)
-        {
-            return (Math.PI / 180) * angle;
-        }
         private Vector2 PositionVector()
         {
             return new Vector2(smartfish.Position.X + smartfish.Rectangle.Width + 0, smartfish.Position.Y + smartfish.Rectangle.Height / 2 + 2);
         }
 
-        private void Move()
-        {
-
-
-        }
-        //fix this somehow
-
         public static bool LineIntersectsRect(Vector2 p1, Vector2 p2, Rectangle r)
         {
-
             return LineIntersectsLine(p1, p2, new Vector2(r.X, r.Y), new Vector2(r.X + r.Width, r.Y)) ||
                    LineIntersectsLine(p1, p2, new Vector2(r.X + r.Width, r.Y), new Vector2(r.X + r.Width, r.Y + r.Height)) ||
                    LineIntersectsLine(p1, p2, new Vector2(r.X + r.Width, r.Y + r.Height), new Vector2(r.X, r.Y + r.Height)) ||
                    LineIntersectsLine(p1, p2, new Vector2(r.X, r.Y + r.Height), new Vector2(r.X, r.Y)) ||
                    (r.Contains(p1) && r.Contains(p2));
         }
+
         //https://stackoverflow.com/questions/2083942/draw-the-two-lines-with-intersect-each-other-and-need-to-find-the-intersect-poin
         private static bool LineIntersectsLine(Vector2 a1, Vector2 a2, Vector2 b1, Vector2 b2)
         {
@@ -167,11 +146,10 @@ namespace FishGame
                 return true;
 
             }
-
-
             else
                 return false;
         }
+
         private static Vector2 GetIntersection(Vector2 p1, Vector2 p2, Rectangle r)
         {
             Vector2 intersect = new();
@@ -191,6 +169,7 @@ namespace FishGame
             }
             return intersect;
         }
+
         private static Vector2 VectLineIntersectsLine(Vector2 a1, Vector2 a2, Vector2 b1, Vector2 b2)
         {
             float dx, dy, da, db, t, s;
@@ -215,8 +194,6 @@ namespace FishGame
                 return new Vector2(a1.X + t * dx, (a1.Y + t * dy));
 
             }
-
-
             else
                 return Vector2.Zero;
         }

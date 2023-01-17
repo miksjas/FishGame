@@ -23,10 +23,11 @@ namespace FishGame
             }
             return outputs;
         }
-
     }
+
     /*    https://towardsdatascience.com/building-a-neural-network-framework-in-c-16ef56ce1fef
-        https://rubikscode.net/2022/07/04/implementing-simple-neural-network-in-c/*/
+        https://rubikscode.net/2022/07/04/implementing-simple-neural-network-in-c/
+    */
     public class Level
     {
         public float[] inputs;
@@ -42,11 +43,10 @@ namespace FishGame
             for (int i = 0; i < inputCount; i++)
             {
                 weights[i] = new float[outputCount];
-                //this.weights
-
             }
-            Level.RandomizeLevel(this);
+            RandomizeLevel(this);
         }
+
         private static void RandomizeLevel(Level level)
         {
             Random rand = new();
@@ -62,6 +62,7 @@ namespace FishGame
                 level.biases[i] = (float)rand.NextDouble() * 2 - 1;
             }
         }
+
         public static float[] FeedForwardAlg(float[] givenInputs, Level level)
         {
             for (int i = 0; i < level.inputs.Length; i++)

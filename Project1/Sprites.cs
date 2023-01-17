@@ -7,7 +7,6 @@ namespace FishGame
     public class Sprite
     {
         public bool IsNotAlive { get; set; }
-
         public Vector2 Position;
         public Vector2 Velocity;
         public Color Colour = Color.White;
@@ -30,7 +29,6 @@ namespace FishGame
         public Sprite(Texture2D texture)
         {
             _texture = texture;
-
         }
 
         public virtual void Update(GameTime gameTime, List<Sprite> sprites)
@@ -75,7 +73,6 @@ namespace FishGame
               Rectangle.Right > sprite.Rectangle.Left &&
               Rectangle.Left < sprite.Rectangle.Right;
         }
-
         #endregion
     }
 }
