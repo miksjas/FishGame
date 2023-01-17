@@ -63,7 +63,7 @@ namespace FishGame
 
             this.defaultFont = defaultFont;
 
-            this.visualization = new Visualization(GraphicsDevice, defaultFont);
+            visualization = new Visualization(GraphicsDevice, defaultFont);
 
             var playerTexture = Content.Load<Texture2D>("fish-smallest");
 
@@ -139,7 +139,8 @@ namespace FishGame
                             Environment.NewLine, (int)elapsedTime);
                 if (MessageBox.Show(message, "GameOver", MessageBoxButtons.OK) == DialogResult.OK)
                 {
-                    this.Exit();
+                var form = new Form1();
+                Exit();
                 }
 
         }

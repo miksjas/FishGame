@@ -21,7 +21,7 @@ namespace FishGame
             {
                 if (!(sprite is Player) && (!(sprite is Sensor)))
                 {
-                    if (sprite.Rectangle.Intersects(this.Rectangle))
+                    if (sprite.Rectangle.Intersects(Rectangle))
                     {
                         IsNotAlive = true;
                     }
@@ -32,13 +32,13 @@ namespace FishGame
             {
                 if (sprite == this)
                 {
-                    if (this.Velocity.Y < 0 && (this.Position.Y < 0) ||
-                        (this.Velocity.Y > 0 & (this.Position.Y > 768 - sprite.Rectangle.Height)))
-                        this.Velocity.Y = 0;
+                    if (Velocity.Y < 0 && (Position.Y < 0) ||
+                        (Velocity.Y > 0 & (Position.Y > 768 - sprite.Rectangle.Height)))
+                        Velocity.Y = 0;
 
-                    if (this.Velocity.X < 0 && (this.Position.X < 0) ||
-                        (this.Velocity.X > 0 & (this.Position.X > 1024 - sprite.Rectangle.Width)))
-                        this.Velocity.X = 0;
+                    if (Velocity.X < 0 && (Position.X < 0) ||
+                        (Velocity.X > 0 & (Position.X > 1024 - sprite.Rectangle.Width)))
+                        Velocity.X = 0;
                 }
             }
 

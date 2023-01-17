@@ -19,7 +19,7 @@ namespace FishGame
         {
             this.texture = texture;
             this.smartfish = smartfish;
-            this.rayAngle = (float)ConvertToRadians(angle + 90);
+            rayAngle = (float)ConvertToRadians(angle + 90);
             smartfish.Sensors.Add(this);
         }
 
@@ -28,22 +28,22 @@ namespace FishGame
         public override void Update(GameTime gameTime, List<Sprite> sprites)
         {
             Move();
-            this.Position = PositionVector();
+            Position = PositionVector();
 
             if (smartfish.IsNotAlive == true)
             {
-                this.IsNotAlive = true;
+                IsNotAlive = true;
             }
-            this.isColliding = false;
-            this.collidingOffset = 0;
+            isColliding = false;
+            collidingOffset = 0;
             foreach (var sprite in sprites)
             {
                 if (sprite is not Player && (sprite is not Sensor))
                 {
                     if (CheckIfLineIntersects(sprite, rayAngle))
                     {
-                        this.collidingOffset = GetIntersectionOffset(sprite, rayAngle);
-                        this.isColliding = true;
+                        collidingOffset = GetIntersectionOffset(sprite, rayAngle);
+                        isColliding = true;
                     }
 
                 }
@@ -85,9 +85,9 @@ namespace FishGame
                 * Math.Sin(angle) + ((PositionVector().Y + texture.Height) - PositionVector().Y) * Math.Cos(angle))), sprite.Rectangle);
             float distance = ((startingPoint.X - intersection.X) * (startingPoint.X - intersection.X) + (startingPoint.Y - intersection.Y) * (startingPoint.Y - intersection.Y));
             offset = (float)(Math.Sqrt(distance) / texture.Height);
-            offset = (float)(offset);
-            var noffset = 1 - offset;
-            return 1 - offset;
+            decimal decimaloffset = Math.Round((decimal)offset,3);
+            var noffset = 1 - decimaloffset;
+            return 1 - (float)decimaloffset;
         }
 
         public override void Draw(SpriteBatch spriteBatch)

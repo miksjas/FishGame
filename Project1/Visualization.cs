@@ -23,11 +23,11 @@ namespace FishGame
         public Visualization(GraphicsDevice graphics, SpriteFont defaultFont)
 
         {
-            this.neuralbackground = Obstacle.CreateTexture(graphics, 300, 768, pixel => Color.Black);
-            this.singlePixel = Obstacle.CreateTexture(graphics, 1, 1, pixel => Color.White);
+            neuralbackground = Obstacle.CreateTexture(graphics, 300, 768, pixel => Color.Black);
+            singlePixel = Obstacle.CreateTexture(graphics, 1, 1, pixel => Color.White);
             this.graphics = graphics;
-            this.circleOutline = CreateCircleOutline(15);
-            this.circleFilled = CreateCircleFilled(14);
+            circleOutline = CreateCircleOutline(15);
+            circleFilled = CreateCircleFilled(14);
             this.defaultFont = defaultFont;
         }
 
@@ -38,10 +38,10 @@ namespace FishGame
         }
         public void Draw(SpriteBatch spriteBatch, List<Level> currentBrainLevels, int currentFishIndex)
         {
-            this.levels = currentBrainLevels;
+            levels = currentBrainLevels;
             spriteBatch.Draw(neuralbackground, new Vector2(0, 0), null, Color.Yellow, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.4f);
             drawNetwork(spriteBatch, levels);
-            spriteBatch.DrawString(defaultFont, "Network of Smartfish: " + currentFishIndex, new Vector2(5, 70), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
+            spriteBatch.DrawString(defaultFont, "Network of fish: " + currentFishIndex, new Vector2(5, 70), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
             spriteBatch.DrawString(defaultFont, "UP", new Vector2(20, 125), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
             spriteBatch.DrawString(defaultFont, "LEFT", new Vector2(89, 125), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
             spriteBatch.DrawString(defaultFont, "RIGHT", new Vector2(160, 125), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
