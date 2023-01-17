@@ -69,7 +69,7 @@ namespace FishGame
             {
                 float by = (float)i / (float)(levels[0].inputs.Length - 1);
                 float x = Lerp(margin, right, by);
-                spriteBatch.Draw(circleOutline, new Vector2(x, bottom), null, Color.Yellow , 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
+                spriteBatch.Draw(circleOutline, new Vector2(x, bottom), null, Color.Yellow, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
                 spriteBatch.Draw(circleFilled, new Vector2(x + 1, bottom + 1), null, Color.Black, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
                 spriteBatch.Draw(circleFilled, new Vector2(x + 1, bottom + 1), null, Color.Red * (float)levels[0].inputs[i], 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
             }
@@ -99,7 +99,7 @@ namespace FishGame
             {
                 float by = (float)i / (float)(levels[1].outputs.Length - 1);
                 float x = Lerp(margin, right, by);
-                spriteBatch.Draw(circleOutline, new Vector2(x, top), null, levels[1].biases[i] > 0 ? Color.Yellow *Math.Abs(levels[1].biases[i]) : Color.Blue * Math.Abs(levels[1].biases[i]), 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
+                spriteBatch.Draw(circleOutline, new Vector2(x, top), null, levels[1].biases[i] > 0 ? Color.Yellow * Math.Abs(levels[1].biases[i]) : Color.Blue * Math.Abs(levels[1].biases[i]), 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
                 spriteBatch.Draw(circleFilled, new Vector2(x + 1, top + 1), null, Color.Black, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
                 spriteBatch.Draw(circleFilled, new Vector2(x + 1, top + 1), null, Color.Red * (float)levels[1].outputs[i], 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
             }
@@ -220,7 +220,6 @@ namespace FishGame
                                 if (lastSkip == outerRadius)
                                 {
                                     break;
-                                    finished = true;
                                 }
                                 else
                                 {
@@ -246,7 +245,7 @@ namespace FishGame
             return texture;
         }
 
-       public static float Lerp(float firstFloat, float secondFloat, float by)
+        public static float Lerp(float firstFloat, float secondFloat, float by)
         {
             return firstFloat * (1 - by) + secondFloat * by;
         }

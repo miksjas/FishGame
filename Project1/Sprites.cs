@@ -1,6 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
 
 namespace FishGame
 {
@@ -16,7 +16,7 @@ namespace FishGame
         public int RectangleHeight;
         public int RectangleWidth;
         public Vector2 Center;
-        
+
         protected Texture2D _texture;
 
         public virtual Rectangle Rectangle
@@ -54,7 +54,7 @@ namespace FishGame
 
         protected bool IsTouchingRight(Sprite sprite)
         {
-            return Rectangle.Left + Velocity.X < sprite.Rectangle.Right &&    
+            return Rectangle.Left + Velocity.X < sprite.Rectangle.Right &&
               Rectangle.Right > sprite.Rectangle.Right &&
               Rectangle.Bottom > sprite.Rectangle.Top &&
               Rectangle.Top < sprite.Rectangle.Bottom;

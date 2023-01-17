@@ -7,21 +7,23 @@ namespace FishGame
 {
     public class FishPlayer : Player
     {
-        private new Color Colour = Color.Yellow;
-
         public List<Sensor> Sensors = new List<Sensor> { };
-        public int NumberOfHiddenNeurons = 6;
-        public int NumberOfSensors = 6;
         public Network Brain;
         public bool IsCurrent = false;
 
+        private new Color Colour = Color.Yellow;
+        private readonly int HiddenNeuronAmount;
+        public int SensorsAmount { get; }
+
         private float[] offsets;
         private float[] outputs;
-        public const int NumberOfOutputs = 4;
+        private const int NumberOfOutputs = 4;
 
-        public FishPlayer(Texture2D texture) : base(texture)
+        public FishPlayer(Texture2D texture, int hiddenNeuronAmount, int sensorsAmount) : base(texture)
         {
-            Brain = new Network(new int[] { NumberOfSensors, NumberOfHiddenNeurons, NumberOfOutputs });
+            HiddenNeuronAmount = hiddenNeuronAmount;
+            SensorsAmount = sensorsAmount;
+            Brain = new Network(new int[] { SensorsAmount, HiddenNeuronAmount, NumberOfOutputs });
         }
 
         public override void Update(GameTime gameTime, List<Sprite> sprites)
@@ -62,9 +64,9 @@ namespace FishGame
                     (Velocity.Y > 0 & (Position.Y > 768 - sprite.Rectangle.Height)))
                         Velocity.Y = 0;
 
-                    if (Velocity.X < 0 && (Position.X < 301) ||
-                        (Velocity.X > 0 & (Position.X > 1024 + 1200 - sprite.Rectangle.Width)))
-                        Velocity.X = 0;
+                if (Velocity.X < 0 && (Position.X < 301) ||
+                    (Velocity.X > 0 & (Position.X > 1024 + 1200 - sprite.Rectangle.Width)))
+                    Velocity.X = 0;
             }
 
             Position += Velocity;

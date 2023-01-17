@@ -1,32 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Forms;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System.Windows.Forms;
 
 
 namespace FishGame
 {
-    /// <summary>
-    /// This is the main type for your game.
-    /// </summary>
     public class FishGame : Game
     {
-        GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
-        Texture2D redRectangle;
+        public int FishAmount { get; set; } = 50;
+        public int HiddenNeuronAmount { get; set; } = 6;
+        public int SensorsAmount { get; set; } = 6;
+
+        private GraphicsDeviceManager graphics;
+        private SpriteBatch spriteBatch;
+        private Texture2D redRectangle;
         private Visualization visualization;
         private List<Sprite> _sprites;
         private List<FishPlayer> _smartFishes;
-        private int counter = 1;
-        private int index = 1;
         private SpriteFont defaultFont;
-        public Dictionary<string, Texture2D> textureDict;
-        public float currentTime;
-        float countDuration = 1.2f;
-        private int _numberOfFishes = 50;
+        private Dictionary<string, Texture2D> textureDict;
+        private float currentTime;
+        private float countDuration = 1.2f;
+        private int counter = 1;
+
         public FishGame()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -87,12 +87,25 @@ namespace FishGame
             {
                 topborder,bottomborder
             };
+            
+            //new Player(playerTexture)
+            //{
+            //    Input = new Input()
+            //    {
+            //        Left = Microsoft.Xna.Framework.Input.Keys.A,
+            //        Right = Microsoft.Xna.Framework.Input.Keys.D,
+            //        Up = Keys.W,
+            //        Down = Keys.S,
+            //    },
+            //    Position = new Vector2(100, 100),
+            //    speedHorizontal = 5,
+            //};
 
             _smartFishes = new List<FishPlayer>();
 
-            for (int i = 0; i < _numberOfFishes; i++)
+            for (int i = 0; i < FishAmount; i++)
             {
-                var fish = new FishPlayer(playerTexture)
+                var fish = new FishPlayer(playerTexture, HiddenNeuronAmount, SensorsAmount)
                 {
                     Input = new Input()
                     {
@@ -108,20 +121,20 @@ namespace FishGame
                 _sprites.Add(fish);
                 _smartFishes.Add(fish);
 
-                for (int sensor = 0; sensor < fish.NumberOfSensors; sensor++)
+                for (int sensor = 0; sensor < fish.SensorsAmount; sensor++)
                 {
-                    var sens = new Sensor(sensortexture, fish, Visualization.Lerp(90, -90, (float)sensor / (float)(fish.NumberOfSensors - 1)));
+                    var sens = new Sensor(sensortexture, fish, Visualization.Lerp(90, -90, (float)sensor / (float)(fish.SensorsAmount - 1)));
                     _sprites.Add(sens);
                 }
             }
-            _smartFishes[_numberOfFishes - 1].IsCurrent = true;
+            _smartFishes[FishAmount - 1].IsCurrent = true;
         }
 
         public void CreateObstacle()
         {
 
             List<int> dimensions = Obstacle.CalculateRandomRectangleParameters();
-            Texture2D texture2D = Obstacle.CreateTexture(GraphicsDevice, dimensions[0], dimensions[1], pixel => Microsoft.Xna.Framework.    Color.Red);
+            Texture2D texture2D = Obstacle.CreateTexture(GraphicsDevice, dimensions[0], dimensions[1], pixel => Microsoft.Xna.Framework.Color.Red);
             redRectangle = texture2D;
             _sprites.Add(
                 new Obstacle(redRectangle)
@@ -134,27 +147,24 @@ namespace FishGame
 
         private void gameOver()
         {
-
-                string message = String.Format("Simulation over. {0} Final Score {1}",
-                            Environment.NewLine, (int)elapsedTime);
-                if (MessageBox.Show(message, "GameOver", MessageBoxButtons.OK) == DialogResult.OK)
-                {
-                
+            string message = String.Format("Simulation over. {0} Final Score {1}",
+                        Environment.NewLine, (int)elapsedTime);
+            if (MessageBox.Show(message, "GameOver", MessageBoxButtons.OK) == DialogResult.OK)
+            {
                 Exit();
-                }
+            }
 
         }
 
 
         protected override void UnloadContent()
         {
-            
+
         }
 
 
         KeyboardState kbState;
         private float elapsedTime;
-        private bool m_IsGameOver;
 
         protected override void Update(GameTime gameTime)
         {
@@ -184,17 +194,17 @@ namespace FishGame
                         break;
                     }
                 }
-                
+
                 _smartFishes[currentFishIndex].IsCurrent = false;
 
                 int fishCounter = _smartFishes.Count;
                 while (fishCounter > 0)
                 {
                     currentFishIndex += leftRightKeyStatus;
-                    
+
                     if (currentFishIndex < 0)
                         currentFishIndex = (_smartFishes.Count - 1);
-                    
+
                     if (currentFishIndex > (_smartFishes.Count - 1))
                         currentFishIndex = 0;
 
@@ -246,10 +256,10 @@ namespace FishGame
             FishPlayer currentFish = _smartFishes.Where(fish => fish.IsCurrent).FirstOrDefault();
 
             visualization.Draw(spriteBatch, currentFish.Brain.Levels, _smartFishes.IndexOf(currentFish));
-            spriteBatch.DrawString(defaultFont, "Score: " +  (int)elapsedTime, new Vector2(5, 10), Microsoft.Xna.Framework.Color.White, 0f, Vector2.Zero, 1.2f, SpriteEffects.None, 0.1f);
+            spriteBatch.DrawString(defaultFont, "Score: " + (int)elapsedTime, new Vector2(5, 10), Microsoft.Xna.Framework.Color.White, 0f, Vector2.Zero, 1.2f, SpriteEffects.None, 0.1f);
 
             spriteBatch.End();
-           
+
             base.Draw(gameTime);
         }
     }

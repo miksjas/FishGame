@@ -85,7 +85,7 @@ namespace FishGame
                 * Math.Sin(angle) + ((PositionVector().Y + texture.Height) - PositionVector().Y) * Math.Cos(angle))), sprite.Rectangle);
             float distance = ((startingPoint.X - intersection.X) * (startingPoint.X - intersection.X) + (startingPoint.Y - intersection.Y) * (startingPoint.Y - intersection.Y));
             offset = (float)(Math.Sqrt(distance) / texture.Height);
-            decimal decimaloffset = Math.Round((decimal)offset,3);
+            decimal decimaloffset = Math.Round((decimal)offset, 3);
             var noffset = 1 - decimaloffset;
             return 1 - (float)decimaloffset;
         }

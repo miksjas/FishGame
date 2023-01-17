@@ -46,7 +46,7 @@ namespace FishGame
 
             Velocity = Vector2.Zero;
         }
-        
+
         public override void Draw(SpriteBatch spriteBatch)
         {
             if (!IsNotAlive)
@@ -55,7 +55,7 @@ namespace FishGame
             }
 
         }
-        
+
         private void Move()
         {
             if (!IsNotAlive)
