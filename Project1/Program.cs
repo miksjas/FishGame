@@ -11,5 +11,6 @@ if (menuForm.ShowDialog() == DialogResult.OK)
     game.FishAmount = menuForm.FishAmount;
     game.HiddenNeuronAmount = menuForm.HiddenNeuronAmount;
     game.SensorsAmount = menuForm.SensorsAmount;
+    game.RunMode = menuForm.RunMode;
     game.Run();
 }

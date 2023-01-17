@@ -8,6 +8,9 @@ namespace FishGame
         public int SensorsAmount { get { return Int32.Parse(enterSensorAmount.SelectedItem.ToString()); } }
         public int HiddenNeuronAmount { get { return Int32.Parse(enterHiddenNeuronAmount.SelectedItem.ToString()); } }
         public int FishAmount { get { return Int32.Parse(enterFishAmount.SelectedItem.ToString()); } }
+
+        public RunMode RunMode { get; set; } = RunMode.Simulation;
+
         public MenuForm()
         {
             InitializeComponent();
@@ -15,51 +18,20 @@ namespace FishGame
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            enterSensorAmount.SelectedItem = "2";
-            enterHiddenNeuronAmount.SelectedItem = "3";
+            enterSensorAmount.SelectedItem = "6";
+            enterHiddenNeuronAmount.SelectedItem = "6";
             enterFishAmount.SelectedItem = "10";
-        }
-
-        private void pictureBox1_Click(object sender, EventArgs e)
-        {
-
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
+            RunMode = RunMode.Solo;
             DialogResult = DialogResult.OK;
-
-        }
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label2_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label3_Click(object sender, EventArgs e)
-        {
-
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-
+            DialogResult = DialogResult.OK;
         }
-
-        private void comboBox4_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-        private void comboBox4_Loaded(object sender, EventArgs e)
-        {
-            enterFishAmount.SelectedIndex = 1;
-
-        }
-
     }
 }

@@ -5,7 +5,7 @@ using System.Windows.Forms;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-
+using Keys = Microsoft.Xna.Framework.Input.Keys;
 
 namespace FishGame
 {
@@ -14,6 +14,7 @@ namespace FishGame
         public int FishAmount { get; set; } = 50;
         public int HiddenNeuronAmount { get; set; } = 6;
         public int SensorsAmount { get; set; } = 6;
+        public RunMode RunMode { get; set; } = RunMode.Simulation;
 
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
@@ -54,7 +55,7 @@ namespace FishGame
         /// </summary>
         protected override void LoadContent()
         {
-            Texture2D sensortexture = Obstacle.CreateTexture(GraphicsDevice, 3, 100, pixel => Microsoft.Xna.Framework.Color.White);
+            Texture2D sensortexture = Obstacle.CreateTexture(GraphicsDevice, 3, 100, pixel => Color.White);
             textureDict = new Dictionary<string, Texture2D>();
 
             spriteBatch = new SpriteBatch(GraphicsDevice);
@@ -70,7 +71,7 @@ namespace FishGame
             textureDict.Add(playerTexture.Name, playerTexture);
 
 
-            Texture2D border = Obstacle.CreateTexture(GraphicsDevice, 1024, 100, pixel => Microsoft.Xna.Framework.Color.Red);
+            Texture2D border = Obstacle.CreateTexture(GraphicsDevice, 1024, 100, pixel => Color.Red);
             Obstacle topborder = new Obstacle(border)
             {
                 speedHorizontal = 0,
@@ -87,54 +88,59 @@ namespace FishGame
             {
                 topborder,bottomborder
             };
-            
-            //new Player(playerTexture)
-            //{
-            //    Input = new Input()
-            //    {
-            //        Left = Microsoft.Xna.Framework.Input.Keys.A,
-            //        Right = Microsoft.Xna.Framework.Input.Keys.D,
-            //        Up = Keys.W,
-            //        Down = Keys.S,
-            //    },
-            //    Position = new Vector2(100, 100),
-            //    speedHorizontal = 5,
-            //};
 
             _smartFishes = new List<FishPlayer>();
 
-            for (int i = 0; i < FishAmount; i++)
+            if (RunMode == RunMode.Solo)
             {
-                var fish = new FishPlayer(playerTexture, HiddenNeuronAmount, SensorsAmount)
+                var fish = new Player(playerTexture)
                 {
                     Input = new Input()
                     {
-                        Left = Microsoft.Xna.Framework.Input.Keys.A,
-                        Right = Microsoft.Xna.Framework.Input.Keys.D,
-                        Up = Microsoft.Xna.Framework.Input.Keys.W,
-                        Down = Microsoft.Xna.Framework.Input.Keys.S,
+                        Left = Keys.A,
+                        Right = Keys.D,
+                        Up = Keys.W,
+                        Down = Keys.S,
                     },
-                    Position = new Vector2(400, 250),
+                    Position = new Vector2(100, 100),
                     speedHorizontal = 5,
-                    Colour = Microsoft.Xna.Framework.Color.Yellow,
                 };
                 _sprites.Add(fish);
-                _smartFishes.Add(fish);
-
-                for (int sensor = 0; sensor < fish.SensorsAmount; sensor++)
-                {
-                    var sens = new Sensor(sensortexture, fish, Visualization.Lerp(90, -90, (float)sensor / (float)(fish.SensorsAmount - 1)));
-                    _sprites.Add(sens);
-                }
             }
-            _smartFishes[FishAmount - 1].IsCurrent = true;
+            else
+            {
+                for (int i = 0; i < FishAmount; i++)
+                {
+                    var fish = new FishPlayer(playerTexture, HiddenNeuronAmount, SensorsAmount)
+                    {
+                        Input = new Input()
+                        {
+                            Left = Keys.A,
+                            Right = Keys.D,
+                            Up = Keys.W,
+                            Down = Keys.S,
+                        },
+                        Position = new Vector2(400, 250),
+                        speedHorizontal = 5,
+                        Colour = Color.Yellow,
+                    };
+                    _sprites.Add(fish);
+                    _smartFishes.Add(fish);
+
+                    for (int sensor = 0; sensor < fish.SensorsAmount; sensor++)
+                    {
+                        var sens = new Sensor(sensortexture, fish, Visualization.Lerp(90, -90, (float)sensor / (float)(fish.SensorsAmount - 1)));
+                        _sprites.Add(sens);
+                    }
+                }
+                _smartFishes[FishAmount - 1].IsCurrent = true;
+            }
         }
 
         public void CreateObstacle()
         {
-
             List<int> dimensions = Obstacle.CalculateRandomRectangleParameters();
-            Texture2D texture2D = Obstacle.CreateTexture(GraphicsDevice, dimensions[0], dimensions[1], pixel => Microsoft.Xna.Framework.Color.Red);
+            Texture2D texture2D = Obstacle.CreateTexture(GraphicsDevice, dimensions[0], dimensions[1], pixel => Color.Red);
             redRectangle = texture2D;
             _sprites.Add(
                 new Obstacle(redRectangle)
@@ -153,15 +159,12 @@ namespace FishGame
             {
                 Exit();
             }
-
         }
-
 
         protected override void UnloadContent()
         {
 
         }
-
 
         KeyboardState kbState;
         private float elapsedTime;
@@ -172,16 +175,14 @@ namespace FishGame
             int leftRightKeyStatus = 0;
             KeyboardState lastkbState = kbState;
             kbState = Keyboard.GetState();
-            if (kbState.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Left) && !lastkbState.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Left))
+            if (kbState.IsKeyDown(Keys.Left) && !lastkbState.IsKeyDown(Keys.Left))
             {
                 leftRightKeyStatus = -1;
             }
-            if (kbState.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Right) && !lastkbState.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Right))
+            if (kbState.IsKeyDown(Keys.Right) && !lastkbState.IsKeyDown(Keys.Right))
             {
                 leftRightKeyStatus = 1;
             }
-
-
 
             if (leftRightKeyStatus != 0)
             {
@@ -246,7 +247,7 @@ namespace FishGame
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.CornflowerBlue);
 
             spriteBatch.Begin(SpriteSortMode.BackToFront, null);
 
@@ -256,7 +257,7 @@ namespace FishGame
             FishPlayer currentFish = _smartFishes.Where(fish => fish.IsCurrent).FirstOrDefault();
 
             visualization.Draw(spriteBatch, currentFish.Brain.Levels, _smartFishes.IndexOf(currentFish));
-            spriteBatch.DrawString(defaultFont, "Score: " + (int)elapsedTime, new Vector2(5, 10), Microsoft.Xna.Framework.Color.White, 0f, Vector2.Zero, 1.2f, SpriteEffects.None, 0.1f);
+            spriteBatch.DrawString(defaultFont, "Score: " + (int)elapsedTime, new Vector2(5, 10), Color.White, 0f, Vector2.Zero, 1.2f, SpriteEffects.None, 0.1f);
 
             spriteBatch.End();
 
