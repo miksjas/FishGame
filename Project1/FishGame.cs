@@ -19,11 +19,11 @@ namespace FishGame
         private List<FishPlayer> _smartFishes;
         private int counter = 1;
         private int index = 1;
-
+        private SpriteFont defaultFont;
         public Dictionary<string, Texture2D> textureDict;
         public float currentTime;
         float countDuration = 1.2f;
-        private int _numberOfFishes = 10;
+        private int _numberOfFishes = 50;
 
         public FishGame()
         {
@@ -57,6 +57,7 @@ namespace FishGame
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             SpriteFont defaultFont = Content.Load<SpriteFont>("defaultFont");
+            this.defaultFont = defaultFont;
             this.visualization = new Visualization(GraphicsDevice, defaultFont);
 
             var playerTexture = Content.Load<Texture2D>("fish-smallest");
@@ -137,13 +138,26 @@ namespace FishGame
         /// checking for collisions, gathering input, and playing audio.
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
+        /// 
+        KeyboardState kbState;
+        private float elapsedTime;
+
         protected override void Update(GameTime gameTime)
         {
             //skip fish if dead
             int leftRightKeyStatus = 0;
+            KeyboardState lastkbState = kbState;
+            kbState = Keyboard.GetState();
+            if (kbState.IsKeyDown(Keys.Left) && !lastkbState.IsKeyDown(Keys.Left))
+            {
+                leftRightKeyStatus = -1;
+            }
+            if (kbState.IsKeyDown(Keys.Right) && !lastkbState.IsKeyDown(Keys.Right))
+            {
+                leftRightKeyStatus = 1;
+            }
 
-            if (Keyboard.GetState().IsKeyDown(Keys.Right)) leftRightKeyStatus = 1;
-            if (Keyboard.GetState().IsKeyDown(Keys.Left)) leftRightKeyStatus = -1;
+
 
             if (leftRightKeyStatus != 0)
             {
@@ -192,6 +206,7 @@ namespace FishGame
             base.Update(gameTime);
 
             currentTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
+            elapsedTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
             if (currentTime >= countDuration)
             {
                 CreateObstacle();
@@ -216,8 +231,10 @@ namespace FishGame
             FishPlayer currentFish = _smartFishes.Where(fish => fish.IsCurrent).FirstOrDefault();
 
             visualization.Draw(spriteBatch, currentFish.Brain.Levels, _smartFishes.IndexOf(currentFish));
-            spriteBatch.End();
+            spriteBatch.DrawString(defaultFont, "Score: " +  (int)elapsedTime, new Vector2(5, 10), Color.White, 0f, Vector2.Zero, 1.2f, SpriteEffects.None, 0.1f);
 
+            spriteBatch.End();
+           
             base.Draw(gameTime);
         }
     }
