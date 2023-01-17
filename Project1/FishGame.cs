@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Windows.Forms;
+
 
 namespace FishGame
 {
@@ -24,7 +27,6 @@ namespace FishGame
         public float currentTime;
         float countDuration = 1.2f;
         private int _numberOfFishes = 50;
-
         public FishGame()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -52,17 +54,23 @@ namespace FishGame
         /// </summary>
         protected override void LoadContent()
         {
-            Texture2D sensortexture = Obstacle.CreateTexture(GraphicsDevice, 3, 100, pixel => Color.White);
+            Texture2D sensortexture = Obstacle.CreateTexture(GraphicsDevice, 3, 100, pixel => Microsoft.Xna.Framework.Color.White);
             textureDict = new Dictionary<string, Texture2D>();
-            // Create a new SpriteBatch, which can be used to draw textures.
+
             spriteBatch = new SpriteBatch(GraphicsDevice);
+
             SpriteFont defaultFont = Content.Load<SpriteFont>("defaultFont");
+
             this.defaultFont = defaultFont;
+
             this.visualization = new Visualization(GraphicsDevice, defaultFont);
 
             var playerTexture = Content.Load<Texture2D>("fish-smallest");
+
             textureDict.Add(playerTexture.Name, playerTexture);
-            Texture2D border = Obstacle.CreateTexture(GraphicsDevice, 1024, 100, pixel => Color.Red);
+
+
+            Texture2D border = Obstacle.CreateTexture(GraphicsDevice, 1024, 100, pixel => Microsoft.Xna.Framework.Color.Red);
             Obstacle topborder = new Obstacle(border)
             {
                 speedHorizontal = 0,
@@ -88,14 +96,14 @@ namespace FishGame
                 {
                     Input = new Input()
                     {
-                        Left = Keys.A,
-                        Right = Keys.D,
-                        Up = Keys.W,
-                        Down = Keys.S,
+                        Left = Microsoft.Xna.Framework.Input.Keys.A,
+                        Right = Microsoft.Xna.Framework.Input.Keys.D,
+                        Up = Microsoft.Xna.Framework.Input.Keys.W,
+                        Down = Microsoft.Xna.Framework.Input.Keys.S,
                     },
                     Position = new Vector2(400, 250),
                     speedHorizontal = 5,
-                    Colour = Color.Yellow,
+                    Colour = Microsoft.Xna.Framework.Color.Yellow,
                 };
                 _sprites.Add(fish);
                 _smartFishes.Add(fish);
@@ -113,7 +121,7 @@ namespace FishGame
         {
 
             List<int> dimensions = Obstacle.CalculateRandomRectangleParameters();
-            Texture2D texture2D = Obstacle.CreateTexture(GraphicsDevice, dimensions[0], dimensions[1], pixel => Color.Red);
+            Texture2D texture2D = Obstacle.CreateTexture(GraphicsDevice, dimensions[0], dimensions[1], pixel => Microsoft.Xna.Framework.    Color.Red);
             redRectangle = texture2D;
             _sprites.Add(
                 new Obstacle(redRectangle)
@@ -124,23 +132,28 @@ namespace FishGame
                 );
         }
 
-        /// <summary>
-        /// UnloadContent will be called once per game and is the place to unload
-        /// game-specific content.
-        /// </summary>
-        protected override void UnloadContent()
+        private void gameOver()
         {
-            // TODO: Unload any non ContentManager content here
+
+                string message = String.Format("Simulation over. {0} Final Score {1}",
+                            Environment.NewLine, (int)elapsedTime);
+                if (MessageBox.Show(message, "GameOver", MessageBoxButtons.OK) == DialogResult.OK)
+                {
+                    this.Exit();
+                }
+
         }
 
-        /// <summary>
-        /// Allows the game to run logic such as updating the world,
-        /// checking for collisions, gathering input, and playing audio.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
-        /// 
+
+        protected override void UnloadContent()
+        {
+            
+        }
+
+
         KeyboardState kbState;
         private float elapsedTime;
+        private bool m_IsGameOver;
 
         protected override void Update(GameTime gameTime)
         {
@@ -148,11 +161,11 @@ namespace FishGame
             int leftRightKeyStatus = 0;
             KeyboardState lastkbState = kbState;
             kbState = Keyboard.GetState();
-            if (kbState.IsKeyDown(Keys.Left) && !lastkbState.IsKeyDown(Keys.Left))
+            if (kbState.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Left) && !lastkbState.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Left))
             {
                 leftRightKeyStatus = -1;
             }
-            if (kbState.IsKeyDown(Keys.Right) && !lastkbState.IsKeyDown(Keys.Right))
+            if (kbState.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Right) && !lastkbState.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Right))
             {
                 leftRightKeyStatus = 1;
             }
@@ -202,6 +215,11 @@ namespace FishGame
             }
             _sprites.RemoveAll(sprite => sprite.Position.X < 0);
             _sprites.RemoveAll(sprite => sprite.IsNotAlive == true);
+            bool contains = _smartFishes.Any(p => p.IsNotAlive == false);
+            if (!contains)
+            {
+                gameOver();
+            }
 
             base.Update(gameTime);
 
@@ -215,13 +233,9 @@ namespace FishGame
             }
         }
 
-        /// <summary>
-        /// This is called when the game should draw itself.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.CornflowerBlue);
 
             spriteBatch.Begin(SpriteSortMode.BackToFront, null);
 
@@ -231,7 +245,7 @@ namespace FishGame
             FishPlayer currentFish = _smartFishes.Where(fish => fish.IsCurrent).FirstOrDefault();
 
             visualization.Draw(spriteBatch, currentFish.Brain.Levels, _smartFishes.IndexOf(currentFish));
-            spriteBatch.DrawString(defaultFont, "Score: " +  (int)elapsedTime, new Vector2(5, 10), Color.White, 0f, Vector2.Zero, 1.2f, SpriteEffects.None, 0.1f);
+            spriteBatch.DrawString(defaultFont, "Score: " +  (int)elapsedTime, new Vector2(5, 10), Microsoft.Xna.Framework.Color.White, 0f, Vector2.Zero, 1.2f, SpriteEffects.None, 0.1f);
 
             spriteBatch.End();
            
