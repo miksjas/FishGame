@@ -41,11 +41,11 @@ namespace FishGame
             this.levels = currentBrainLevels;
             spriteBatch.Draw(neuralbackground, new Vector2(0, 0), null, Color.Yellow, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.4f);
             drawNetwork(spriteBatch, levels);
-            spriteBatch.DrawString(defaultFont, "Network of Smartfish: " + currentFishIndex, new Vector2(5, 30), Color.White, 0f, Vector2.Zero, 1.2f, SpriteEffects.None, 0.1f);
-            spriteBatch.DrawString(defaultFont, "UP", new Vector2(23, 130), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
-            spriteBatch.DrawString(defaultFont, "LEFT", new Vector2(86, 130), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
-            spriteBatch.DrawString(defaultFont, "RIGHT", new Vector2(170, 130), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
-            spriteBatch.DrawString(defaultFont, "DOWN", new Vector2(255, 130), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
+            spriteBatch.DrawString(defaultFont, "Network of Smartfish: " + currentFishIndex, new Vector2(5, 70), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
+            spriteBatch.DrawString(defaultFont, "UP", new Vector2(20, 125), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
+            spriteBatch.DrawString(defaultFont, "LEFT", new Vector2(89, 125), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
+            spriteBatch.DrawString(defaultFont, "RIGHT", new Vector2(160, 125), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
+            spriteBatch.DrawString(defaultFont, "DOWN", new Vector2(240, 125), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
 
 
             /*            spriteBatch.Draw(circle, new Vector2(15, 150), null, Color.Yellow*0.8f, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
