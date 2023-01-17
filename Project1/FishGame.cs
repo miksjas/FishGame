@@ -139,7 +139,7 @@ namespace FishGame
                             Environment.NewLine, (int)elapsedTime);
                 if (MessageBox.Show(message, "GameOver", MessageBoxButtons.OK) == DialogResult.OK)
                 {
-                var form = new Form1();
+                
                 Exit();
                 }
 

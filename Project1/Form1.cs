@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -52,5 +53,16 @@ namespace FishGame
         {
 
         }
+
+        private void comboBox4_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+        private void comboBox4_Loaded(object sender, EventArgs e)
+        {
+            comboBox4.SelectedIndex=1;
+
+        }
+
     }
 }
