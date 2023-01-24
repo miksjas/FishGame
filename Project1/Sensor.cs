@@ -22,7 +22,7 @@ namespace FishGame
             smartfish.Sensors.Add(this);
         }
 
-        public override void Update(GameTime gameTime, List<Sprite> sprites)
+        public override void Update(GameTime gameTime, List<Sprite> sprites, float? simulationSpeed)
         {
             Position = PositionVector();
 

@@ -31,7 +31,7 @@ namespace FishGame
             _texture = texture;
         }
 
-        public virtual void Update(GameTime gameTime, List<Sprite> sprites)
+        public virtual void Update(GameTime gameTime, List<Sprite> sprites, float? simulationSpeed)
         {
 
         }

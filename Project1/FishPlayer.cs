@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -26,9 +27,11 @@ namespace FishGame
             Brain = new Network(new int[] { SensorsAmount, HiddenNeuronAmount, NumberOfOutputs });
         }
 
-        public override void Update(GameTime gameTime, List<Sprite> sprites)
+        public override void Update(GameTime gameTime, List<Sprite> sprites, float? simulationSpeed)
         {
+
             //Debug.WriteLine(this.Position.X + " " + this.Position.Y + " ");
+            Debug.WriteLine(Brain);
 
             offsets = new float[Sensors.Count];
 
@@ -69,7 +72,7 @@ namespace FishGame
                     Velocity.X = 0;
             }
 
-            Position += Velocity;
+            Position += Vector2.Multiply(Velocity, (float)simulationSpeed);
             Velocity = Vector2.Zero;
         }
         private void Move()

@@ -16,6 +16,7 @@ namespace FishGame
         public int SensorsAmount { get; set; } = 6;
         public RunMode RunMode { get; set; } = RunMode.Simulation;
 
+        public float simulationSpeed = 1;
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
         private Texture2D redRectangle;
@@ -183,7 +184,7 @@ namespace FishGame
         {
             if (RunMode == RunMode.Solo)
             {
-                if(player.IsNotAlive)
+                if (player.IsNotAlive)
                 {
                     gameOver();
                 }
@@ -191,9 +192,27 @@ namespace FishGame
             //skip fish if dead
             if (RunMode == RunMode.Simulation)
             {
+
                 int leftRightKeyStatus = 0;
                 KeyboardState lastkbState = kbState;
+                int upDownKeyStatus = 0;
                 kbState = Keyboard.GetState();
+                if (kbState.IsKeyDown(Keys.Up) && !lastkbState.IsKeyDown(Keys.Up))
+                {
+                    upDownKeyStatus = 1;
+                }
+                if (kbState.IsKeyDown(Keys.Down) && !lastkbState.IsKeyDown(Keys.Down))
+                {
+                    upDownKeyStatus = -1;
+                }
+                if (upDownKeyStatus == -1)
+                {
+                    simulationSpeed = simulationSpeed - 0.1f;
+                }
+                if (upDownKeyStatus == 1)
+                {
+                    simulationSpeed = simulationSpeed + 0.1f;
+                }
                 if (kbState.IsKeyDown(Keys.Left) && !lastkbState.IsKeyDown(Keys.Left))
                 {
                     leftRightKeyStatus = -1;
@@ -237,11 +256,14 @@ namespace FishGame
                         fishCounter--;
                     }
                 }
+
             }
+
+
             foreach (var sprite in _sprites)
             {
 
-                sprite.Update(gameTime, _sprites);
+                sprite.Update(gameTime, _sprites, simulationSpeed);
 
             }
             _sprites.RemoveAll(sprite => sprite.Position.X < 0);

@@ -13,7 +13,7 @@ namespace FishGame
 
         }
 
-        public override void Update(GameTime gameTime, List<Sprite> sprites)
+        public override void Update(GameTime gameTime, List<Sprite> sprites, float? simulationSpeed)
         {
             Move();
 

@@ -16,16 +16,11 @@ namespace FishGame
             this.texture = texture;
 
         }
-        public override void Update(GameTime gameTime, List<Sprite> sprites)
+        public override void Update(GameTime gameTime, List<Sprite> sprites, float? simulationSpeed)
         {
-            Move();
 
-        }
-        private void Move()
-        {
             Position += Velocity;
-            Velocity.X = speedHorizontal;
-
+            Velocity.X = (float)(speedHorizontal * simulationSpeed);
         }
 
         override public void Draw(SpriteBatch spriteBatch)
